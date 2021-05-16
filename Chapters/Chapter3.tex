@@ -1,0 +1,58 @@
+% Chapter 3
+
+\chapter{ Finite element algorithms for contact problems} % Main chapter title
+
+\label{Chapter3} % For referencing the chapter elsewhere, use \ref{Chapter1} 
+
+%----------------------------------------------------------------------------------------
+
+\section{Finite element method for solid mechanics problems \parencite{ref2}\parencite{ref3}}
+%----------------------------
+\subsection{Problem statement}
+The displacements along coordinate axes x, y and z are defined by the displacement vector $\{u\}$ 
+
+\begin{equation}
+    \label{eqn:u}
+    \{u\}=\left\{\begin{array}{lll}u & v & w \end{array}\right\} 
+   \end{equation}
+   Six different strain components are able to place in the strain vector $\{\varepsilon\}$:
+
+\begin{equation}
+    \{\varepsilon\}=\{\varepsilon_x,\varepsilon_y,\varepsilon_z,\varepsilon_{xy},\varepsilon_{yz},\varepsilon_{xz} \}
+    % \label{eqn:epsilon}
+\end{equation}
+Which are related to strains for elastic body by the Hook’s law:
+
+\begin{equation}
+    \begin{array}{l}
+        \{ \sigma \}  = [E]\left\{ {{\varepsilon ^e}} \right\} = [E]\left( {\{ \varepsilon \}  - \left\{ {{\varepsilon ^t}} \right\}} \right)\\
+        \left\{ {{\varepsilon ^t}} \right\} = \{ \alpha T\quad \alpha T\quad \alpha T\quad 0\quad 0\quad 0\} 
+    \end{array}
+   \end{equation}
+Here $\{\varepsilon^e \}$ is the elastic part of strains; $\{\varepsilon^t\}$ is the thermal part of strains; $\alpha$ is the coefficient of thermal expansion; T is temperature. The elasticity matrix [E] has the following appearance:
+
+\begin{equation}
+    [E] = \left[ {\begin{array}{*{20}{c}}
+        {\lambda  + 2\mu }&\lambda &\lambda &0&0&0\\
+        \lambda &{\lambda  + 2\mu }&\lambda &0&0&0\\
+        \lambda &\lambda &{\lambda  + 2\mu }&0&0&0\\
+        0&0&0&\mu &0&0\\
+        0&0&0&0&\mu &0\\
+        0&0&0&0&0&\mu 
+        \end{array}} \right] N
+\end{equation}
+
+Where $\lambda$ and $\mu$ are elastic Lame constants which can be expressed through the Young’s modulus E and Poisson’s ratio $\nu$ :
+
+\begin{equation} 
+    \label{eq1}
+    \begin{split}
+        \lambda  &= \frac{{vE}}{{(1 + v)(1 - 2v)}}\\
+        \mu  &= \frac{E}{{2(1 + v)}}
+    \end{split}
+    \end{equation}
+The purpose of finite element solution of elastic problem is used to find such displacement field which provides minimum to the functional of total potential energy $\Pi$:
+    \begin{equation}
+ \Pi=\int_{V} \frac{1}{2}\left\{\varepsilon^{e}\right\}^{T}\{\sigma\} d V-\int_{V}\{u\}^{T}\left\{p^{v}\right\} d V-\int_{S}\{u\}^{T}\left\{p^{s}\right\} d S 
+\end{equation}
+

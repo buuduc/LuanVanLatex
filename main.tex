@@ -40,9 +40,9 @@ headsepline, % Uncomment to get a line under the header
 
 \usepackage[utf8]{inputenc} % Required for inputting international characters
 \usepackage[T1]{fontenc} % Output font encoding for international characters
-
+\usepackage{float}
 \usepackage{mathpazo} % Use the Palatino font by default
-
+\usepackage{amsmath}
 % \usepackage[backend=bibtex,style=authoryear,natbib=true]{biblatex} % Use the bibtex backend with the authoryear citation style (which resembles APA)
 \usepackage[%
   backend=bibtex,
@@ -171,10 +171,10 @@ headsepline, % Uncomment to get a line under the header
 
 % Include the chapters of the thesis as separate files from the Chapters folder
 % Uncomment the lines as you write the chapters
-
-\include{Chapters/Chapter1_Introduction.tex}
-%\include{Chapters/Chapter2} 
-%\include{Chapters/Chapter3}
+% \include{Temp/Chapters/Chapter1.tex}
+\include{Chapters/Chapter1}
+\include{Chapters/Chapter2} 
+\include{Chapters/Chapter3}
 %\include{Chapters/Chapter4} 
 %\include{Chapters/Chapter5} 
 
