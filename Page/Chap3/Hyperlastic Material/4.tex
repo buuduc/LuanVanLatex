@@ -1,0 +1,44 @@
+Using the three invariants, a general form of strain energy density can be defined in the following polynomials:
+\begin{equation}
+\label{eqn:3.104}
+ W\left(I_{1}, I_{2}, I_{3}\right)=\sum_{m+n+k=1}^{\infty} A_{m n k}\left(I_{1}-3\right)^{m}\left(I_{2}-3\right)^{n}\left(I_{3}-1\right)^{k} 
+\end{equation}
+where $ A_{m n k} $ are coefficients of polynomials. In general, deformation of a material can be decomposed into volumetric and distortional parts. If the material is incompressible, i.e., $ I_{3}=1 $, then the volumetric part of the strain energy density is eliminated, and only the first two terms contribute to the strain energy density. This part of the stored energy is called the distortional strain energy density and is defined as
+\begin{equation}
+\label{eqn:3.105}
+W_{1}\left(I_{1}, I_{2}\right)=\sum_{m+n=1}^{\infty} A_{m n}\left(I_{1}-3\right)^{m}\left(I_{2}-3\right)^{n}
+\end{equation}
+
+Note that Eq. (\ref{eqn:3.105}) does not impose the incompressibility condition. A separate constraint must be used to make the material incompressible. All the models listed above account for nonconstant shear modulus. However, caution needs to be exercised on inclusion of higher-order terms to fit the data, since this may result in unstable energy functions, yielding nonphysical results outside the range of the experimental data. Various hyperelastic material models are proposed using Eq. (\ref{eqn:3.105}). 
+%----------------------------------------
+\subsection{Neo-Hookean Model }
+Proposed by Ronald Rivlin (1915–2005) in 1948, Dr. Rivlin is also well-known for the Mooney-Rivlin hyper-elastic model. It can be seen that neo-Hookean is not a model named after a person. This British-American physicist studied physics and mathematics at St John’s College, Cambridge, being awarded a BA in 1937 and a ScD in 1952. He worked for the General Electric Company, then the UK Ministry of Aircraft Production, then the British Rubber Producers Research Association. He later moved to the United States and taught at Brown University and Lehigh University.
+
+The Neo-Hookean model is the simplest form of all commonly used hyper-elastic models. This model has only one nonzero parameter, $ A_{10} $, and all other parameters are zero. Using the undeformed state as a frame of reference, the strain energy density can be defined as
+\begin{equation}
+\label{eqn:3.106}
+ W_{1}\left(I_{1}\right)=A_{10}\left(I_{1}-3\right) 
+\end{equation}
+
+In order to be equivalent to the linear elastic material in small deformation, the parameter $ A_{10} $ is related to the shear modulus by $ A_{10}=\mu / 2 $. The stress-strain relation becomes linear with a proportional constant of $ 2 A_{10}=\mu $. However, this model will show a nonlinear relationship when the deformation becomes larger due to the nonlinear displacement-strain relation. This model gives a good correlation with the experimental data up to $ 40 \% $ strain in uniaxial tension and up to $ 90 \% $ strains in simple shear. This model is often used to describe the behavior of crosslinked polymers.
+
+Although this model is not as versatile as other models, especially for large strain or tensile conditions. The neo-Hookean model has the following advantages:
+\begin{enumerate}
+    \item  \textbf{Simple}. There are only 2 input parameters. If the material is assumed to be incompressible, then only one parameter is required: the initial shear modulus. Since only one parameter is needed from the test data, the number of required tests is small.
+    \item \textbf{Compatible}. The material parameter obtained from one type of deformation stress-strain curve can be used to predict other types of deformation. Especially for the small and medium strain conditions.
+\end{enumerate}
+
+It is worth mentioning that neo-Hookean is not only applied to science and engineering but also used in the computer graphics in the filming industry because of its simplicity and physical-based solutions. For example, the process of hand movement, the muscle and skin changes calculated using the neo-Hookean model appear extremely natural.
+
+\subsection{Example for Neo-Hookean Model}
+We discuss the stress–strain relationship for Neo–Hookean model in example below:
+\textit{Example:} Plot the nominal stress–strain relationship for a Neo–Hookean model under uniaxial tension and
+compression and compare it with linear elastic material with the same modulus.
+Assume material parameter A 10  10MPa and incompressibility.
+
+\textit{Solution:} Let us suppose that a uniaxial load is stretched so that $\lambda_ 1  \lambda$ where $ \lambda $ is an
+arbitrary stretch along the rod’s length. From the assumption of incompressibility,
+$\lambda_ 1 \lambda _2 \lambda_ 3  =1 $ and $ \lambda_ 2  \lambda_3$ . Therefore,$ \lambda_ 2  \lambda _3  =1/ \lambda$ . From Eq. (\ref{eqn:3.106}), the strain energy density of the Neo–Hookean material model becomes
+\begin{equation*}
+ W=A_{10}\left(I_{1}-3\right)=A_{10}\left(\lambda_{1}^{2}+\lambda_{2}^{2}+\lambda_{3}^{2}-3\right)=A_{10}\left(\lambda^{2}+\frac{2}{\lambda}-3\right) 
+\end{equation*}

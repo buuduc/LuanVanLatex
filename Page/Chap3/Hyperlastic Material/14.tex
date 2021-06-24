@@ -1,0 +1,59 @@
+\subsection{ Algorithm for Stress Calculation}
+
+In computer programming, it is convenient to use vector and matrix notation rather than tensor notation. Thus, in the following algorithm, vector and matrix notation will be used. Below is the procedure of stress calculation for the Mooney-Rivlin hyperelastic material. The inputs are the Lagrangian strain and material parameters, and the outputs are the six components of the second Piola-Kirchhoff stress:
+
+\begin{enumerate}
+\item For given strain $ \{\mathbf{E}\}=\left\{E_{11}, E_{22}, E_{33}, E_{12}, E_{23}, E_{13}\right\}^{\mathrm{T}} $ and given material
+
+constants $ \left(A_{10}, A_{01}\right. $, and $ K $ ) for the penalty method, or material constants $ \left(A_{10}\right. $ and $ A_{01} $ ) and the hydrostatic pressure $ p $ for the mixed formulation method, perform the following calculation.
+
+\item  Set $ \{\mathbf{1}\}=\{1,1,1,0,0,0\}^{\mathrm{T}} $ and $ \{\mathbf{C}\}=2 \times\{\mathbf{E}\}+\{\mathbf{1}\} $.
+
+\item  Calculate the three invariants:
+
+$I_1=C_1 + C_2 + C_3$
+
+$ I_{2}=C_{1} \times C_{2}+C_{1} \times C_{3}+C_{2} \times C_{3}-C_{4} \times C_{4}-C_{5} \times C_{5}-C_{6} \times C_{6} $
+
+$ I_{3}=\left(C_{1} \times C_{2}-C_{4} \times C_{4}\right) \times C_{3}+\left(C_{4} \times C_{6}-C_{1} \times C_{5}\right) \times C_{5}+ \\ \left(C_{4} \times C_{5}-C_{2} \times C_{6}\right) \times C_{6} $
+
+
+
+\item Calculate the derivatives of invariants with respect to the Lagrangian strain:
+
+$\left\{I_{1, \mathbf{E}}\right\}=2 \times \{1\}$
+
+$ \left\{I_{2, \mathbf{E}}\right\}=2 \times\left\{C_{2}+C_{3}, C_{3}+C_{1}, C_{1}+C_{2},-C_{4},-C_{5},-C_{6}\right\}^{\mathrm{T}} $
+
+
+
+$ \left\{I_{3, \mathbf{E}}\right\}=2 \times\left\{C_{2} C_{3}-C_{5} C_{5}, C_{3} C_{1}-C_{6} C_{6}, C_{1} C_{2}-C_{4} C_{4} - \right. $
+
+
+
+$ \left.C_{5} C_{6}-C_{3} C_{4}, C_{6} C_{4}-C_{1} C_{5}, C_{4} C_{5}-C_{2} C_{6}\right\}^{\mathrm{T}} $
+
+
+
+\item  Calculate the derivatives of the reduced invariants.
+
+
+
+$ \left\{J_{1, \mathbf{E}}\right\}=I_{3}^{-1 / 3}\left\{I_{1, \mathbf{E}}\right\}-\frac{1}{3} I_{1} I_{3}^{-4 / 3}\left\{I_{3, \mathbf{E}}\right\} $
+
+$ \left\{J_{2, \mathbf{E}}\right\}=I_{3}^{-2 / 3}\left\{I_{2, \mathbf{E}}\right\}-\frac{2}{3} I_{2} I_{3}^{-5 / 3}\left\{I_{3, \mathbf{E}}\right\} $
+
+
+
+$ \left\{J_{3, \mathbf{E}}\right\}=\frac{1}{2} I_{3}^{-1 / 2}\left\{I_{3, \mathbf{E}}\right\} $
+
+
+
+\item  Calculate the second Piola-Kirchhoff stress from Neo-Hookean model:
+
+$ \{\mathbf{S}\}=A_{10}\left\{J_{1, \mathbf{E}}\right\}+A_{01}\left\{J_{2, \mathbf{E}}\right\}+p\left\{J_{3, \mathbf{E}}\right\} . $
+
+When the penalty method is used, then use $ K\left(J_{3}-1\right) $ instead of $ p $.
+
+\end{enumerate}
+

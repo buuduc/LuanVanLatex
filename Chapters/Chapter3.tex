@@ -1,0 +1,456 @@
+% Chapter 3
+
+\chapter{ Finite element algorithms for contact problems \parencite{CONTACTBOOK} \parencite{ref4} } % Main chapter title
+
+\label{Chapter4} % For referencing the chapter elsewhere, use \ref{Chapter1} 
+
+%----------------------------------------------------------------------------------------
+
+\section{Introduction}
+Boundary value problems involving contact are of great importance in industrial applications
+in mechanical and civil engineering. The range of application includes metal forming
+processes, drilling problems, bearings, crash analysis of cars, car tires or cooling of electronic
+devices. Other applications are related to biomechanics where human joints, implantats or
+teeth are of consideration. Due to this variety contact problems are today combined either
+with large elastic or inelastic deformations including time dependent responses. Thermal
+coupling might have to be considered, see the cooling of electronic devices, the heat removal
+within nuclear power plant vessels or thermal insulation of astronautic vehicles. Even
+stability behaviour has to be linked to contact, like wrinkling arising in metal forming
+problems.
+
+Due to this technical importance a great number of researchers have investigated contact
+problems. In the ancient egypt people needed to move large stone blocks to build the
+pyramids and thus had to overcome the frictional force associated with it. Thus many known
+researchers in the past have investigated frictional contact problems, amongst them were
+Da Vinci, Amontons, Newton, Coulomb. Their investigations were based on the assumption
+of rigid bodies. Starting with the classical analytical work of Hertz (1882) on the elastic
+contact of two spheres the deformation of the bodies being in contact has been taken into
+account. However only very few problems involving contact can be solved analytically. Thus
+for most industrial applications numerical methods have to be applied when the contacting
+bodies have complex geometries . Due to that the solution of contact problems with ﬁnite
+element methods has a relatively long history, see Wilson, Parsons (1970) or Chan, Tuba
+(1971) for early treatments.
+
+In this overview article we will restrict ourselves mainly to ﬁnite element techniques for
+the treatment of contact problems despite many other numerical schemes and analytical
+approaches could be discussed as well. Furthermore we like to note that the description
+of the mechanical behaviour of the bodies coming into contact will not be investigated in
+detail, although this is of great importance. This article thus concentrates on the behaviour
+in the contact interface. The associated formulation and discretization within the ﬁnite
+element method will be considered as well as the development of algorithms.
+\section{Contact Geometry}
+This section summarizes relations which are necessary to formulate the geometrical contact
+conditions. In detail the penetration and the relative slip in the contact area are discussed.
+The ﬁrst condition also includes the non–penetration condition which is used classically in
+contact mechanics.
+
+We assume that two bodies which undergo large deformations can come into contact.
+Let $\mathcal{B}^\gamma$ , $ \gamma= 1, 2$ , denote the two bodies of interest and $\boldsymbol{\varphi}_{t}^{\gamma}: \mathcal{B}^{\gamma} \rightarrow \mathbb{R}^{3}$ the associated
+deformation maps at time $t \in \mathbb{R}$. $\phi_t^{\gamma}$ maps points $\boldsymbol{X}^\gamma \in \mathcal{B}^\gamma$ of the reference conﬁguration
+onto points $x^\gamma = \phi ^\gamma_t(X^\gamma)$ of the current conﬁguration.
+
+%---------------------------------------------------
+\section{Penetration}
+As the ﬁrst relevant function for the contact geometry we deﬁne a penetration function on
+the current slave surface $\phi _t^1(\Gamma_c^1)$ by setting
+\begin{equation}
+ g_{N+}=\left\{\begin{array}{ll}\left\|\mathbf{x}^{1}-\hat{\mathbf{x}}_{t}^{2}\left(\bar{\xi}^{1}, \bar{\xi}^{2}\right)\right\| & \text { for }\left[\mathbf{x}^{1}-\hat{\mathbf{x}}_{t}^{2}\left(\bar{\xi}^{1}, \bar{\xi}^{2}\right)\right] \cdot \overline{\mathbf{n}}^{2}<0 \\ 0 & \text { otherwise }\end{array}\right. 
+ \label{eqn:4.1} 
+\end{equation}
+
+Here $(\hat{\xi}^1,\hat{\xi}^2)$ is the minimizer of the distance function for a given slave point $x^1$
+\begin{equation}
+ \hat{d}^{1}\left(\xi^{1}, \xi^{2}\right)=\left\|\mathbf{x}^{1}-\hat{\mathbf{x}}_{t}^{2}\left(\xi^{1}, \xi^{2}\right)\right\| \longrightarrow \mathrm{MIN} 
+ \label{eqn:4.2} 
+\end{equation}
+
+The values  $(\hat{\xi}^1,\hat{\xi}^2)$ are obtained by writing the necessary condition for the minimum of
+the distance function (\ref{eqn:4.2})
+\begin{equation}
+ \frac{d}{d \xi^{\alpha}} \hat{d}^{1}\left(\xi^{1}, \xi^{2}\right)=\frac{\mathbf{x}^{1}-\hat{\mathbf{x}}_{t}^{2}\left(\xi^{1}, \xi^{2}\right)}{\left\|\mathbf{x}^{1}-\hat{\mathbf{x}}_{t}^{2}\left(\xi^{1}, \xi^{2}\right)\right\|} \cdot \hat{\mathbf{x}}_{t, \alpha}^{2}\left(\xi^{1}, \xi^{2}\right)=0
+ \label{eqn:4.3} 
+\end{equation}
+
+The solution of (\ref{eqn:4.3}) requires the orthogonality of the ﬁrst and second term. Since
+$ \hat{\mathbf{x}}_{t, \alpha}^{2}\left(\xi^{1}, \xi^{2}\right) 
+$  is the tangent vector $a^_\alpha$ the ﬁrst term must denote the normal $n^2$ . Thus we
+have the condition $-n^2 \cdot a^2_\alpha=0$ which means that the current master point $ \hat{\mathbf{x}}_{t}^{2}\left(\xi^{1}, \xi^{2}\right) 
+$ is
+the orthogonal projection of a given slave point $x^1$ onto the current master surface $\phi_t^2(\Gamma^2_c)$ .
+
+Here and in the following we will denote by a bar over a quantity its evaluation at the
+minimal distance point $\left(\overline{\xi}^{1}, \overline{\xi}^{2}\right)$ which means that these values denote the solution point of
+(\ref{eqn:4.3}). Thus $\overline{\mathbf{n}}^{2}:=\left(\overline{\mathbf{a}}_{1}^{2} \times \overline{\mathbf{a}}_{2}^{2}\right) /\left\|\overline{\mathbf{a}}_{1}^{2} \times \overline{\mathbf{a}}_{2}^{2}\right\|$ is the outward unit normal on the current master
+surface at the master point where $\overline{a}_\alpha^2$ are tangent vectors at $\hat{\mathbf{x}}_{t}^{2}\left(\overline{\xi^{1}}, \overline{\xi^{2}}\right)$.
+
+The penetration function (\ref{eqn:4.1}) contains two informations:
+\begin{enumerate}
+    \item $g_{N+} $ serves as a local contact check, i.e. we set: $\text{contact} \Leftrightarrow	 g_{ N + }> 0$
+    \item  $g_{N+} $ enters for $g_{N+} > 0$as a local kinematical variable the constitutive function for the contact pressure.
+\end{enumerate}
+
+By taking the time derivative of (\ref{eqn:4.2}) at the minimal distance point $\left(\overline{\xi}^{1}, \overline{\xi}^{2}\right)$ ) one obtains,
+in the case of contact, the rate of penetration
+\begin{equation}
+ \dot{g}_{N+}=\left[\mathbf{v}_{t}^{1}-\hat{\mathbf{v}}_{t}^{2}\left(\bar{\xi}^{1}, \bar{\xi}^{2}\right)\right] \cdot \overline{\mathbf{n}}^{2} 
+ \label{eqn:4.4} 
+\end{equation}
+for given spatial velocities $v_t^1 $ and $\hat{v}_t^2\left(\overline{\xi}^{1},\overline{\xi}^{2}\right)$  at the slave and master points.
+%------------------------------------------------------------------------------
+\section{Tangential Relative Velocity and Tangential Relative Slip}
+The tangential relative slip between two bodies is related to the change of the solution point
+$( \overline{\xi}^1 , \overline{\xi}^2)$ of the minimal distance problem. Thus we can compute the time derivative of $\xi^ \alpha$
+from (\ref{eqn:4.3}). This yields the following result 
+\begin{equation}
+ \frac{d}{d t}\left\{\left[\mathbf{x}_{t}^{1}-\hat{\mathbf{x}}_{t}^{2}\left(\bar{\xi}^{1}, \bar{\xi}^{2}\right)\right] \cdot \overline{\mathbf{a}}_{\alpha}^{2}\right\}=\left[\mathbf{v}_{t}^{1}-\hat{\mathbf{v}}_{t}^{2}\left(\bar{\xi}^{1}, \bar{\xi}^{2}\right)-\overline{\mathbf{a}}_{\beta}^{2} \dot{\overline{\xi}}^{\beta} \right] \cdot \overline{\mathbf{a}}_{\alpha}^{2}+\left[\mathbf{x}_{t}^{1}-\hat{\mathbf{x}}_{t}^{2}\left(\bar{\xi}^{1}, \bar{\xi}^{2}\right)\right] \cdot \dot{\overline{\mathbf{a}}}_{\alpha}^{2}=0 
+ \label{eqn:4.7} 
+\end{equation}
+with $\dot{\overline{{\mathbf{a}}}}_{\alpha}^{2}=\hat{\mathbf{v}}_{t, \alpha}^{2}\left(\bar{\xi}^{1}, \bar{\xi}^{2}\right)+\hat{\mathbf{x}}_{t, \alpha \beta}^{2}\left(\bar{\xi}^{1}, \overline{\xi}^{2}\right) \dot{\overline{\xi}}^{\beta} $ we obtain $\dot{\overline{\xi}}^{\beta} $ from the following system of equations
+\begin{equation}
+    \label{eqn:4.8} 
+    \overline{H}_{\alpha \beta } \dot{\overline{\xi}}^{\beta} =\overline{R}_\alpha
+\end{equation}
+with 
+\begin{equation}
+ \begin{aligned} \overline{H}_{\alpha \beta} &=\left[\bar{a}_{\alpha \beta}+g_{N+} \overline{b}_{\alpha \beta}\right] \\ \overline{R}_{\alpha} &=\left[\mathbf{v}_{t}^{1}-\hat{\mathbf{v}}_{t}^{2}\left(\overline{\xi}^{1}, \overline{\xi}^{2}\right)\right] \cdot \overline{\mathbf{a}}_{\alpha}^{2}+g_{N+} \overline{\mathbf{n}}^{2} \cdot \hat{\mathbf{v}}_{t, \alpha}^{2}\left(\overline{\xi}^{1}, \overline{\xi}^{2}\right) \end{aligned} 
+ \label{eqn:4.9} 
+\end{equation}
+
+$\bar{a}_{\alpha \beta}$ and $\overline{b}_{\alpha \beta}$  are the ﬁrst and second fundamental form of the deformed surface, well known
+from diﬀerential geometry.
+
+Let us now deﬁne the tangential relative velocity function on the current slave surface $\varphi^1_t(\Gamma_c^1)$ by setting
+\begin{equation}
+ \mathcal{L}_{v} \mathbf{g}_{T}:={\dot{\overline{\xi}^{\alpha}}} \overline{\mathbf{a}}_{\alpha}^{2} 
+ \label{eqn:4.10} 
+\end{equation}
+
+Equation (\ref{eqn:4.10}) determines per deﬁnition the evolution of the tangential slip $g_T$ which
+enters as a local kinematical variable the constitutive function for the contact tangential
+stress, see next section. The rate \dot{\overline{\xi}^{\alpha}} in (\ref{eqn:4.1}) at the solution point $( \overline{\xi}^ 1 , \overline{\xi}^ 2 )$ has been already
+computed in (\ref{eqn:4.8}).
+%------------------------------------------------------------------------------
+\section{Boundary Value Problem, Global Solution Strategies}
+For the formulation of the boundary value problem we have to discuss only the additional
+terms due to contact in detail. The equations describing the behaviour of the bodies coming
+into contact do not change. However, for completeness, the balance equations and a simple
+constitutive model are stated for elastic solids undergoing ﬁnite deformation.
+\subsection{Local Balance Equations for the Solid}
+We can formulate the local momentum equation for a body $\mathcal{B}^\gamma$ as
+
+\begin{equation}
+ \operatorname{DIV} \mathbf{P}^{\gamma}+\overline{\mathbf{f}}^{\gamma}=\mathbf{0} 
+ \label{eqn:4.24} 
+\end{equation}
+in case that inertia terms are neglected. $P^\gamma$ denotes the ﬁrst Piola–Kirchhoﬀ stress tensor acting in the body $\gamma,\overline{f}^\gamma$ are the body forces. Next we formulate the boundary conditions
+for the deformation and the stress ﬁeld
+\begin{equation}
+ \begin{aligned} \boldsymbol{\varphi}^{\gamma} &=\overline{\boldsymbol{\varphi}}^{\gamma} & & \text { on } \quad \Gamma_{\varphi}^{\gamma} \\ \mathbf{t}^{\gamma} &=\overline{\mathbf{t}}^{\gamma} & & \text { on } \quad \Gamma_{\sigma}^{\gamma} \end{aligned} 
+ \label{eqn:4.25} 
+\end{equation}
+
+where $\overline{\boldsymbol{\varphi}}$ and $\overline{\mathbf{t}}^{\gamma} $  are described quantities. Furthermore we have to account for the contact
+condition which is given  with the deﬁnition of the gap function (\ref{eqn:4.1}) when
+an approach of the bodies in the contact interface is allowed or by the condition which yields the inequality
+\begin{equation}
+     g_{N+}^{L} \geq 0 \quad  on  \quad \Gamma_{c} 
+     \label{eqn:4.26} 
+\end{equation}
+%--------------------------------------------------------------------------
+\subsection{Constitutive Relations}
+
+As a model for non–linear constitutive equations we use a form valid for ﬁnite elasticity which
+leads to a non–linear relation between the Kirchhoﬀ stress $\tau$ and the left Cauchy Green tensor
+$ b = F F^ T : \tau = f ( b )$. The Kirchhoﬀ stress is related to the ﬁrst Piola–Kirchhoﬀ stress via
+$\tau = P F ^T$ , with $F$ being the deformation gradient. The simplest constitutive equation for
+hyperelasticity is known as the Neo–Hookian model and can e. g. be applied for rubber
+materials undergoing moderately large strains, see e.g. Ogden (1984). It is stated below for
+the body $\mathcal{B}^\gamma$ with the Jacobian of the deformation $J ^ \gamma = det F ^\gamma$
+
+\begin{equation}
+    \label{eqn:4.27} 
+     \boldsymbol{\tau}^{\gamma}=\Lambda^{\gamma}\left(J^{\gamma}-1\right) \mathbf{1}+\mu^{\gamma}\left(\mathbf{b}^{\gamma}-\mathbf{1}\right).
+\end{equation}
+
+Material parameters for the body $\mathcal{B}^\gamma$ are the Lame constants $\Lambda^\gamma$ and $\nu^\gamma$ . The material
+model is valid for ﬁnite elastic deformations. Of course we can consider more complicated
+constitutive relations which can also be of inelastic nature. It should be noted that since the
+contact has to be formulated only within the interface, the constitutive laws for the bodies coming into contact can be arbitrary and do not aﬀect the main algorithmic treatment of
+the contact problem. However it is clear that the physical properties of the surfaces of the
+bodies are inﬂuenced by the general constitutive behaviour.
+%--------------------------------------------------------------------
+\subsection{Weak Formulation}
+
+For a numerical solution of the nonlinear boundary value problem summarized above we
+will use the ﬁnite element method. Thus we need the weak form of equations (\ref{eqn:4.24}) to (\ref{eqn:4.27}).
+Due to the fact that the constraint condition (\ref{eqn:4.24}) is represented by an inequality we obtain
+in general a variational inequality. The general form can be written as
+\begin{equation}
+ \sum_{\gamma=1}^{2} \int_{\Omega^{\gamma}} \boldsymbol{\tau}^{\gamma} \cdot \operatorname{grad}\left(\boldsymbol{\eta}^{\gamma}-\boldsymbol{\varphi}^{\gamma}\right) d V \geq \sum_{\gamma=1}^{2} \int_{\Omega^{\gamma}} \overline{\mathbf{f}}^{\gamma} \cdot\left(\boldsymbol{\eta}^{\gamma}-\boldsymbol{\varphi}^{\gamma}\right) d V-\int_{\Gamma_{\sigma} \gamma} \overline{\mathbf{t}}^{\gamma} \cdot\left(\boldsymbol{\eta}^{\gamma}-\boldsymbol{\varphi}^{\gamma}\right) d A 
+ \label{eqn:4.28} 
+\end{equation}
+where the integration is performed with respect to the domain $\Omega^ \gamma$ occupied by the body
+$\mathcal{B}^ \gamma $in the reference conﬁguration. The stress tensor and the gradient operator ”grad” are
+evaluated with respect to the current coordinates.
+
+We now have to ﬁnd the deformation $(\varphi^1,\varphi^2)$ such that (\ref{eqn:4.26}a) is fulﬁlled for all $(\eta^1,\eta^2)$ with
+\begin{equation}
+ \mathbf{K}=\left\{\left(\boldsymbol{\eta}^{1}, \boldsymbol{\eta}^{2}\right) \in \mathbf{V} \mid\left[\boldsymbol{\eta}^{1}-\hat{\eta}^{2}\left(\bar{\xi}^{1}, \bar{\xi}^{2}\right)\right] \cdot \overline{\mathbf{n}}^{2} \geq 0\right\} 
+\end{equation}
+
+The strain energy function has to be polyconvex and the solution lies in the usual Sobolev space $W ^{1,p} $.
+The space $V$ is deﬁned as $\mathbf{V}=\left\{\boldsymbol{\eta}^{\gamma} \in\left[W^{1, p}\left(\Omega^{\gamma}\right)\right]^{\operatorname{dim}} \mid \boldsymbol{\eta}^{\gamma}=\mathbf{0} \quad\right. $ on $ \left.\Gamma_{u}\right\}$ , dim denotes the dimension of the problem at hand.
+
+Within an active set strategy we can write the weak form as an equality since we know
+the active set within an incremetal solution step. Then equations (\ref{eqn:4.24}) to (\ref{eqn:4.27}) yield
+\begin{equation}
+     \sum_{\gamma=1}^{2}\left\{\int_{\Omega^{\gamma}} \boldsymbol{\tau}^{\gamma} \cdot \operatorname{grad} \boldsymbol{\eta}^{\gamma} d V-\int_{\Omega ^\gamma} \overline{\mathbf{f}}^{\gamma} \cdot \boldsymbol{\eta}^{\gamma} d V-\int_{\Gamma_{\sigma} \gamma} \overline{\mathbf{t}}^{\gamma} \cdot \boldsymbol{\eta}^{\gamma} d A\right\} 
+ + \textit{"Contact Contributions"}  =0
+ \label{eqn:4.30} 
+\end{equation}
+
+Note that the integration is performed with regard to the reference conﬁguration but the
+stress tensor and the gradients are evaluated with respect to current conﬁguration. $\eta^\gamma \in V$
+is the so called test function or virtual displacement which is zero at the boundary $\Gamma_\varphi^\gamma$ where
+the deformations are prescribed.
+
+For two boform of the interface by assuming that contact is active at the surface $\Gamma_c$ . dies being in contact we obtain the weak Then the formulation follows for the three diﬀerent
+cases as given below.
+\begin{enumerate}
+    \item \textbf{Lagrangian multiplier method:}
+    \begin{equation}
+ \int_{\Gamma_{c}}\left(\lambda_{N} \delta g_{N+}^{L}+\lambda_{T} \cdot \delta \mathbf{g}_{T}\right) d A 
+ \label{eqn:4.31} 
+\end{equation}
+Here $\lambda_N$ denotes the Lagrangian multiplier which can be identiﬁed as the contact
+ pressure $p_N \bulle \epsilon g_{N+}^Lt$ is the variation of the normal gap. The term $\lambda _T \bullet \epsilon g _T $is associated with
+the tangential stick or slip motion and needs further discussion. In case of pure stick
+the relative tangential slip $g _T$ is zero which yields a constraint equation from which $\lambda _T$
+follows as a reaction. In case of sliding the tangential stress vector $t _T$ is determined
+by the constitutive law for frictional slip,  thus we should write
+instead of $\boldsymbol{\lambda}_{T} \cdot \delta \mathbf{g}_{T} \longrightarrow \mathbf{t}_{T} \cdot \delta \mathbf{g}_{T} $ .
+
+\item \textbf{Penalty method:}
+In this formulation a penalty term due to the constraint condition is added to the
+weak form (\ref{eqn:4.26}). This means that once the constraint equation for $g_{N+}^L$ is violated
+\begin{equation}
+ \int_{\Gamma_{c}} \epsilon_{N} g_{N+}^{L} \delta g_{N+}^{L} d A, \quad \epsilon_{N}>0 
+    \label{eqn:4.32} 
+\end{equation}
+has to be considered for normal contact. The solution of the Lagrangian multiplier method can be recovered from this
+formulation for $\epsilon_N \rightarrow \infty$, however this will lead to an ill–conditioned problem, see next section. As in the Lagrangian multiplier method we have to distinguish between
+pure stick in the contact interface which produces a penalty term also for the tangential
+direction
+\begin{equation}
+ \int_{\Gamma_{c}}\left(\epsilon_{N} g_{N+}^{L} \delta g_{N+}^{L}+\epsilon_{T} \mathbf{g}_{T} \cdot \delta \mathbf{g}_{T}\right) d A, \quad \epsilon_{N}>0, \epsilon_{T}>0 
+ \label{eqn:4.33} 
+\end{equation}
+and the slip condition which leads to
+\begin{equation}
+ \int_{\Gamma_{c}}\left(\epsilon_{N} g_{N+}^{L} \delta g_{N+}^{L}+\mathbf{t}_{T} \cdot \delta \mathbf{g}_{T}\right) d A, \quad \epsilon>0 
+ \label{eqn:4.34} 
+\end{equation}
+
+\item \textbf{Constitutive equation in the interface:}
+\begin{equation}
+ \int_{\Gamma_{c}}\left(p_{N} \delta g_{N}+\mathbf{t}_{T} \cdot \delta \mathbf{g}_{T}\right) d A\label{eqn:4.35} 
+\end{equation}
+One can easily see, that the introduction of the constitutive equation for the normal pressure
+yields a nonlinear penalty functional for the normal contact. The standard penalty method
+can be recovered from this relation by using $n = 1$. However this choice is somehow
+artificial since the usual range of the constitutive parameter n, stemming from experiments,
+is in the range $2   \leq 3.33$.
+
+In equations (\ref{eqn:4.31}) to (\ref{eqn:4.35}) the variation of the normal gap function $g_{N+}$ is needed which
+yields
+\begin{equation}
+ \delta g_{N+}=\left[\boldsymbol{\eta}^{1}-\boldsymbol{\eta}^{2}\left(\bar{\xi}_{1}, \bar{\xi}_{2}\right)\right] \cdot \overline{\mathbf{n}}^{2} 
+ \label{eqn:4.36} 
+\end{equation}
+
+Furthermore the variation of the tangential slip can be stated as
+\begin{equation}
+ \delta \mathbf{g}_{T}=\delta \bar{\xi}^{\alpha} \overline{\mathbf{a}}_{\alpha}^{2} 
+\label{eqn:4.37} 
+\end{equation}
+\end{enumerate}
+
+The latter relation follows simply from (\ref{eqn:4.10}) by replacing the velocities $v$ by the test
+function $\eta$ in (\ref{eqn:4.9})
+
+\section{Discretization Techniques Within The Contact Area}
+The discretization of the domain contributions of the bodies being in contact in (\ref{eqn:4.30}) is not
+objective of this work. Within this context we refer to the ﬁnite element implementations of
+boundary-value-problems regarding ﬁnite elasticity. This leads to the following matrix formulation for the weak form (\ref{eqn:4.30})
+\begin{equation}
+ \mathbf{G}(\mathbf{v})=\sum_{\gamma=1}^{2}\left\{\int_{\mathcal{B}^{\gamma}} \mathbf{B}^{T} \boldsymbol{\tau}^{\gamma} d V-\int_{\mathcal{B}^{\gamma}} \mathbf{N}^{T} \overline{\mathbf{f}}^{\gamma} d V-\int_{\Gamma_{\sigma} \gamma} \mathbf{N}^{T} \overline{\mathbf{t}}^{\gamma} d A\right\} 
+ \label{eqn:4.43}
+\end{equation}
+where the matrix $N$ contains the shape functions and the so–called $B$matrix contains
+the derivatives of the shape functions. Any standard ﬁnite element book can be used, for
+details.
+
+Here we focus on the contact constraints. For reasons of simplicity we will restrict
+ourselves here to two dimensional formulations. We like now to discuss diﬀerent possibilities to discretize the contact
+contributions (\ref{eqn:4.31}) to (\ref{eqn:4.35}) and the variations in normal and tangential direction (\ref{eqn:4.36}) and (\ref{eqn:4.37}).
+
+The basic diﬀerence between the Lagrangian method (\ref{eqn:4.31}) and the penalty approach (\ref{eqn:4.32})
+lies in the fact that the Lagrangian multiplier formulation is a mixed method which means
+that both variables $\lambda_N$ and $ \epsilon_{gN}$ have to be discretized.
+\begin{equation}
+ \int_{\Gamma_{\mathrm{c}}} \lambda_{N} \delta g_{N} d \Gamma \longrightarrow \int_{\Gamma_{c}^{h}} \lambda_{N}^{h} \delta g_{N}^{h} d \Gamma 
+ \label{eqn:4.44}
+\end{equation}
+with the interpolations for $\lambda_{N}^{h}$ and $ \delta g_{N}^{h}$
+\begin{equation}
+ \lambda_{N}^{h}=\sum_{K} M_{K}(\xi) \lambda_{N K} \quad  \textit{and} \quad \delta g_{N}^{h}=\sum_{I} N_{I}(\xi) \delta g_{N I} 
+\end{equation}
+
+In the following we will only discuss discretizations related to the penalty method and
+to the formulation using constitutive equations in the contact interface where the contact
+pressure follows e.g. via $(\ref{eqn:4.10})$ from the displacement variables.
+
+In general there are diﬀerent discretizations of $\Gamma_c$ possible which depend on the problem
+(linear or nonlinear kinematics), on the discretization of the bodies in contact and on the
+type of constitutive interface law. Some discretizations are depicted in Figure \ref{fig:abcd} a) to d).
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{Figure2/Chap4/abcd.png}
+    \caption{Diﬀerent contact discretizations}
+    \label{fig:abcd}
+\end{figure}
+\subsection{Node–to–node Contact Element}
+Figure \ref{fig:abcd} a) shows the so-called node–to–node contact which can only be applied to geometrically linear problems since a relative tangential movement of the nodes is not allowed in
+the contact area. Due to its simplicity it resolves the integral (\ref{eqn:4.32}) to
+\begin{equation}
+ \int_{\Gamma_{c}} \epsilon_{N} g_{N} \delta g_{N} d \Gamma \longrightarrow \sum_{i=1}^{n_{c}} \epsilon_{N} g_{N i} \delta g_{N i} A_{i}=\sum_{i=1}^{n_{c}} \epsilon_{N} g_{N i}\left(\boldsymbol{\eta}_{i}^{1}-\boldsymbol{\eta}_{i}^{2}\right) \cdot \mathbf{n}_{i}^{2} A_{i} 
+ \label{eqn:4.46}
+\end{equation}
+
+where $n _c$ are the contact nodes in $\Gamma^h_c$. The test function $\eta_i^\alpha$ and the normal vector $n^ 2_ i$ is
+deﬁned for the node $i$ . Often the area $A_ i$ is neglected
+(or ”hidden” in the penalty parameter - $\epsilon_N$ ) in the node–to–node contact formulation which
+means that the contact stress $p_N=\epsilon_N g_N$ becomes a contact (nodal) force $f_{Ni}=\epsilon_N g_{Ni}$ .Then an evaluation of a contact interface law is not possible with discretization
+(\ref{eqn:4.46}). The associated matrix formulation leads in the geometrically linear case for the contact
+element i to the deﬁnition of the contact residual $G ^c_i = \xi ^T G^ c_i $ and its associated tangent
+matrix $K ^c_i $ with
+\begin{equation}
+ \mathbf{G}_{i}^{c}=\epsilon_{N} g_{N i} \mathbf{N}_{i}, \quad \mathbf{K}_{i}^{c}=\epsilon_{N} \mathbf{N}_{i} \mathbf{N}_{i}^{T}, \quad  \textit{with}  \quad \mathbf{N}_{i}=\left\{\begin{array}{r}\mathbf{n}_{i}^{2} \\ -\mathbf{n}_{i}^{2}\end{array}\right\} 
+\end{equation}
+
+\subsection{Isoparametric Discretization of the Contact Contribution}
+In Figure \ref{fig:abcd} b) a contact element is shown which also does not allow a relative tangential
+movement in the contact area and thus is only valid for geometrically linear applications.
+Within this element the gap function $g_{N+}$ is discretized by an isoparametric interpolations
+leading also to a well deﬁned contact pressure. We obtain with the interpolation
+\begin{equation}
+     g_{N+}^{h}=\sum_{I} N_{I}(\xi) g_{N I} \qquad  \textit{and}  \qquad \delta g_{N+}^{h}=\sum_{I} N_{I}(\xi)\left(\boldsymbol{\eta}_{I}^{1}-\boldsymbol{\eta}_{I}^{2}\right) \cdot \mathbf{n}^{2} 
+\end{equation}
+the discretization of the contact integral (\ref{eqn:4.32})
+\begin{equation}
+ \int_{\Gamma_{c}} \epsilon_{N} g_{N} \delta g_{N} d \Gamma \longrightarrow \int_{-1}^{1} \epsilon_{N} g_{N+}^{h}(\xi)\left[\sum_{I} N_{I}(\xi)\left(\boldsymbol{\eta}_{I}^{1}-\boldsymbol{\eta}_{I}^{2}\right) \cdot \mathbf{n}^{2}\right]\left\|\frac{d x^{h}}{d \xi}\right\| d \xi 
+ \label{eqn:4.48}
+\end{equation}
+
+Finally numerical integration can be applied to evaluate (48). For the proper choice of the
+numerical integration rule. This discretization leads to a contact element which
+can be applied together with four or nine node quadilaterals for the continuum problem.
+Due to the smooth discretization a good approximation of the contact pressure is obtained.
+%-----------------------------------------------------------
+\subsection{Node–to–segment Contact Discretization}
+A more general discretization of the contact interface which allows also for large tangential
+sliding is given by the setup depicted in Figure \ref{fig:abcd} c). This discretization is named node–to–segment contact element and is widely used in nonlinear ﬁnite element simulations of
+contact problems.
+
+Due to its importance we like to consider this contact element in more detail. Assume
+that the discrete slave point (s) comes into contact with the master segment (1)–(2), see
+Figure 6. With the interpolation for the master segment
+\begin{equation}
+ \hat{\mathbf{x}}^{2}(\xi)=\mathbf{x}_{1}^{2}+\left(\mathbf{x}_{2}^{2}-\mathbf{x}_{1}^{2}\right) \xi 
+ \label{eqn:4.49}
+\end{equation}
+one can easily compute the tangent vector of the segment leading to
+\begin{equation}
+ \overline{\mathbf{a}}_{1}^{2}=\hat{\mathbf{x}}^{2}(\xi)_{, 1}=\left(\mathbf{x}_{2}^{2}-\mathbf{x}_{1}^{2}\right) 
+ \label{eqn:4.50}
+\end{equation}
+
+It is connected to an orthonormal base vector $a ^2_1$  by $a ^2_1 = \overline{a}^2_1 / l $ with $l =\left\| x ^2_2 -  x ^2_1 \right\| $  being
+the current length of the master segment. With the unit tangent vector $a ^2_1$ the unit normal
+to the segment $(1)–(2)$ can be deﬁned as $n ^2 = e _3 × a ^2_1$ .
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.6]{Figure2/Chap4/fig6.png}
+    \caption{Node–to–segment element}
+    \label{fig4:6}
+\end{figure}
+
+$\overline{\xi}$ and $g _N$ are given by the solution of the minimal distance problem by the projection
+of the slave node $x_s$ in $(s)$ onto the master segment $(1)–(2$)
+\begin{equation}
+    \label{eqn:4.51}
+     \bar{\xi}=\frac{1}{l}\left(\mathbf{x}_{s}^{1}-\mathbf{x}_{1}^{2}\right) \cdot \mathbf{a}_{1}^{2} \quad  \textit{and}  \quad g_{N s}=\left\|\mathbf{x}_{s}^{1}-(1-\bar{\xi}) \mathbf{x}_{1}^{2}-\bar{\xi} \mathbf{x}_{2}^{2}\right\| 
+\end{equation}
+
+From these equations and the local formulation (\ref{eqn:4.4}) we compute directly the variation of the
+gap function $\delta^g_{N+}$ on the straight master segment (1)–(2).
+\begin{equation}
+ \delta g_{N s}=\left[\boldsymbol{\eta}_{s}^{1}-(1-\bar{\xi}) \boldsymbol{\eta}_{1}^{2}-\bar{\xi} \boldsymbol{\eta}_{2}^{2}\right] \cdot \mathbf{n}^{2}
+ \label{eqn:4.52}
+\end{equation}
+
+The local equation (\ref{eqn:4.9}) yields the expression for $\delta \overline{\xi}$.  With the interpolation for the variation $\hat{\boldsymbol{\eta}}^{2}(\xi)=\boldsymbol{\eta}_{1}^{2}+\xi\left(\boldsymbol{\eta}_{2}^{2}-\boldsymbol{\eta}_{1}^{2}\right) $ on the straight master segment $(1)–(2) $ we specialize
+\begin{equation}
+ \begin{aligned} \bar{H}_{\alpha \beta} &=\left(a_{\alpha \beta}+g_{N} b_{\alpha \beta}\right) \Longrightarrow \bar{H}_{11}=a_{11}=l^{2} \\ \bar{R}_{1} &=\left[\boldsymbol{\eta}^{1}-\hat{\boldsymbol{\eta}}^{2}(\bar{\xi})\right] \cdot \overline{\mathbf{a}}_{1}^{2}+g_{N s} \overline{\mathbf{n}}^{2} \cdot \hat{\boldsymbol{\eta}}_{1}^{2}(\bar{\xi}) \end{aligned} 
+\end{equation}
+which leads to
+\begin{equation}
+ \delta g_{T}=l \delta \bar{\xi}=\left[\boldsymbol{\eta}_{s}^{1}-(1-\bar{\xi}) \boldsymbol{\eta}_{1}^{2}-\bar{\xi} \boldsymbol{\eta}_{2}^{2}\right] \cdot \mathbf{a}_{1}^{2}+\frac{g_{N s}}{l}\left[\boldsymbol{\eta}_{2}^{2}-\boldsymbol{\eta}_{1}^{2}\right] \cdot \mathbf{n}^{2} 
+\label{eqn:4.53}
+\end{equation}
+
+Equations (\ref{eqn:4.51}), (\ref{eqn:4.52}) and (\ref{eqn:4.53}) characterize the main kinematical relations of the contact
+element in Figure \ref{fig:abcd} c).
+
+In what follows we compute the contribution of the node–to–segment element to the weak
+form (\ref{eqn:4.30}). The basic formulation for this discretization is analogous to (\ref{eqn:4.46}). Thus we assume
+that we know the normal force $P _{N s} = p_ {N s} A_ s$ and the tangential force $T_{ T s} = t_ {T s} A _s$ at the
+discrete contact point (s) of the contact element under consideration where A s denotes the
+area of the contact element. Both forces, $P _{N s}$ and $ T_{Ts}$  leads to
+\begin{equation}
+ \int_{\Gamma_{c}}\left(p_{N} \delta g_{N}+t_{T} \delta g_{T}\right) d \Gamma-\longrightarrow \sum_{s=1}^{n_{c}}\left(P_{N s} \delta g_{N s}+T_{T s} \delta g_{T s}\right) 
+ \label{eqn:4.54}
+\end{equation}
+
+ The contributions of one contact element in (\ref{eqn:4.54}) takes the form 
+\begin{equation}
+ \delta g_{N s} P_{N s}+\delta g_{T s} T_{T s} 
+ \label{eqn:4.55}
+\end{equation}
+for the discrete contact point (s) with the mechanical relative (Lie–type) variations analogous
+to (\ref{eqn:4.52}) and (\ref{eqn:4.53}). This equations can now be cast into a matrix formulation. For the normal
+part $(\ref{eqn:4.54})_ 1$ we set for the variation (\ref{eqn:4.52}) of the penetration
+\begin{equation}
+ \delta g_{N s}=\mathbf{\eta}^{T} \mathbf{N}_{s} 
+ \label{eqn:4.56}
+\end{equation}
+
+With the same notation we can express the variation (\ref{eqn:4.53}) of the tangential gap
+\begin{equation}
+    \delta g_{T s}=\boldsymbol{\eta}^{T}\left(\mathbf{T}_{s}+\frac{g_{N s}}{l} \mathbf{N}_{0 s}\right)
+\label{eqn:4.57}
+\end{equation}
+
+In $ (\ref{eqn:4.56}) $ and $ (\ref{eqn:4.57}) $ the following vectors have been used
+\begin{equation}
+ \boldsymbol{\eta}=\left(\begin{array}{lll}\boldsymbol{\eta}_{s}^{1} & \boldsymbol{\eta}_{1}^{2} & \boldsymbol{\eta}_{2}^{2}\end{array}\right)^{T} 
+ \label{eqn:4.58}
+\end{equation}
+% --cheater 
+\input{Page/Chap4/24}
+\input{Page/Chap4/25}
+\input{Page/Chap4/26}
+\input{Page/Chap4/27}
+\input{Page/Chap4/28}
+% \input{Page/Chap4/29}
+% \input{Page/Chap4/30}

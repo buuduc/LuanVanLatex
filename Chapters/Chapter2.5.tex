@@ -1,0 +1,455 @@
+\chapter{Non-linear Static Structural - Strategies and Solutions} % Main chapter title
+
+\label{Chapter2 } % For referencing the chapter elsewhere, use \ref{Chapter1} 
+% \setlength{\parskip}{0.38cm}
+\label{sec:nonlinear}
+\vspace{0.38cm}
+\newline
+With geometrical non-linearity, alterations regarding geometrically linear observation:
+\begin{itemize}
+    \item Consideration of non-linear terms of the strain tensor E (kinematics)
+     \item Establishing the forces equilibrium or application of the impulse theorem in the deformed
+configuration (kinetics)
+
+\end{itemize}
+We use: 
+
+
+\begin{itemize}
+    \item  (Total) Lagrange point of view which is also described as the material point of view
+     \item Stress and strain quantities in the undeformed configuration (second Piola Kirchhoff
+stress tensor and Green Lagrange strain tensor)
+
+\end{itemize}
+
+The revolving point of this chapter is the numerical solution of non-linear vector equations $r_i(u)=r$ of time-independent structural mechanics as well as the assessment of deformation statesregarding the stability of the structure involved, as part of a geometrically non-linear finite
+element analysis.
+\newpage
+
+
+\section{Kinematics}
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.5]{Figures/Chapter2/anh3.png}
+    \decoRule   
+    \caption{ Current and reference configuration of a deformable material body}
+    \label{fig:chap2anh3}
+\end{figure}
+
+\noindent
+The fundamental of the geometrically non-linear formulation of structural mechanics is based on
+the material deformation gradient F , which was already used within the scope of deriving the linear strain tensor  with the help of a non-linear deformation analysis of a material body, and
+within the scope of subsequent linearization but not elaborated
+because in linear observations it possesses no further significance. Non-linear observations are
+a different story where the material deformation gradient defines the transformation from
+reference to current configuration or from undeformed to deformed state and vice versa. These
+transformations are referred to in technical literature as push forward and pull back. The
+material deformation gradient is defined by a transformation of a line element dX of the
+reference configuration to the current configuration dx (see figure \ref{fig:chap2anh3} ).
+
+\begin{equation}
+    dx = F \cdot dX; \quad F = \frac{{\partial x}}{{\partial X}} = \nabla x
+\end{equation}
+The Green Lagrange strain tensor E was also already derived and is given in equation (1.12) as function of the displacement gradient $\nabla u$ and its transpose ${\nabla ^T}u$. If we describe the
+motion of the material point from the reference to the current configuration with help of the
+displacement vector $\bf x = X + u$, the Green Lagrange strain tensor
+\begin{equation}
+    \label{5.7}
+    E = \frac{1}{2}\left[ {{F^T} \cdot F - {\bf{1}}} \right] = {\nabla ^{{\rm{sym}}}}u + \frac{1}{2}{\nabla ^T}u \cdot \nabla u = \frac{1}{2}\left[ {{\nabla ^T}u + \nabla u + {\nabla ^T}u \cdot \nabla u} \right]
+\end{equation}
+can be represented as a function of the material deformation gradient.
+\begin{equation}
+ \boldsymbol{F}=\frac{\partial}{\partial \boldsymbol{X}}(\boldsymbol{X}+\boldsymbol{u})=\mathbf{1}+\nabla \boldsymbol{u} 
+\end{equation}
+According to this relation, the components of the term
+\begin{equation}
+ \nabla^{\operatorname{sym}} \boldsymbol{u}=\left[\begin{array}{ccc}u_{1,1} & \frac{1}{2}\left(u_{1,2}+u_{2,1}\right) & \frac{1}{2}\left(u_{1,3}+u_{3,1}\right) \\ \frac{1}{2}\left(u_{1,2}+u_{2,1}\right) & u_{2,2} & \frac{1}{2}\left(u_{2,3}+u_{3,2}\right) \\ \frac{1}{2}\left(u_{1,3}+u_{3,1}\right) & \frac{1}{2}\left(u_{2,3}+u_{3,2}\right) & u_{3,3}\end{array}\right] 
+\end{equation}
+of the linear part of the strain tensor E, given explicitly in equations (1.13) and (1.14), are
+supplemented by the term $1/2 \nabla^T u$ · $\nabla u$, in the scope of geometrically non-linear theory, which can again be calculated with the displacement vector gradient according to eq. (1.7)
+\begin{equation}
+ \nabla \boldsymbol{u}=\left[\begin{array}{lll}u_{1,1} & u_{1,2} & u_{1,3} \\ u_{2,1} & u_{2,2} & u_{2,3} \\ u_{3,1} & u_{3,2} & u_{3,3}\end{array}\right] 
+\end{equation}
+by matrix multiplication.
+\begin{equation}
+ \frac{1}{2} \nabla^{T} \boldsymbol{u} \cdot \nabla \boldsymbol{u}=\frac{1}{2}\left[\begin{array}{lll}u_{k, 1}u_{k, 1} & u_{k, 1}u_{k, 2} & u_{k, 1} u_{k, 3} \\ u_{k, 2}u_{k, 1} & u_{k, 2}u_{k, 2} & u_{k, 2}u_{k, 3} \\ u_{k, 3}u_{k, 1} & u_{k, 3}u_{k, 2} & u_{k, 3}u_{k, 3}\end{array}\right] 
+\end{equation}
+It should be noted that the summation is performed over $k = 1, 2, 3$, respectively. The component presentation of the Green Lagrange strain tensor finally yields the following:
+\begin{equation}
+\label{5.12}
+ E_{i j}=\frac{1}{2}\left(u_{i, j}+u_{j, i}+u_{k, i} u_{k, j}\right); \qquad \boldsymbol{E}=E_{i j} \boldsymbol{E}_{i} \otimes \boldsymbol{E}_{j} 
+\end{equation}
+In order to formulate the non-linear Finite Element methods, it remains to convert the calculation rule of the strain tensor, given in eq. (\ref{5.7}) or (\ref{5.12}), into the calculation rule of the strain
+vector in a suitable way . The linear part of the strain tensor can be expressed as a vector by
+application of the differential operator $D_\varepsilon$ to the displacement vector u, as described in eq.
+(1.16). However, for the non-linear part of the strain tensor, no suitable operator presentation
+can be found.
+\begin{equation}
+\label{5.13}
+    {\bf{E}}({\bf{u}}) = \left[ {\begin{array}{*{20}{c}}
+{{E_{11}}}\\
+{{E_{22}}}\\
+{{E_{33}}}\\
+{2{E_{12}}}\\
+{2{E_{23}}}\\
+{2{E_{13}}}
+\end{array}} \right] = \left[ {\begin{array}{*{20}{c}}
+{{u_{1,1}}}\\
+{{u_{2,2}}}\\
+{{u_{3,3}}}\\
+{{u_{1,2}} + {u_{2,1}}}\\
+{{u_{2,3}} + {u_{3,2}}}\\
+{{u_{1,3}} + {u_{3,1}}}
+\end{array}} \right] + \left[ {\begin{array}{*{20}{l}}
+{1/2\left( {{u_{1,1}}{u_{1,1}} + {u_{2,1}}{u_{2,1}} + {u_{3,1}}{u_{3,1}}} \right)}\\
+{1/2\left( {{u_{1,2}}{u_{1,2}} + {u_{2,2}}{u_{2,2}} + {u_{3,2}}{u_{3,2}}} \right)}\\
+{1/2\left( {{u_{1,3}}{u_{1,3}} + {u_{2,3}}{u_{2,3}} + {u_{3,3}}{u_{3,3}}} \right)}\\
+{{u_{1,1}}{u_{1,2}} + {u_{2,1}}{u_{2,2}} + {u_{3,1}}{u_{3,2}}}\\
+{{u_{1,2}}{u_{1,3}} + {u_{2,2}}{u_{2,3}} + {u_{3,2}}{u_{3,3}}}\\
+{{u_{1,1}}{u_{1,3}} + {u_{2,1}}{u_{2,3}} + {u_{3,1}}{u_{3,3}}}
+\end{array}} \right]{\rm{ }}
+\end{equation}
+According to eq (\ref{5.13}), the Green Lagrange strain tensor of geometrically non-linear
+deformations is obtained by addition of the well-known linear part ${\bf D}_\varepsilon \bf u$ and the non-linear part $\bf E^\textnormal{nl}(u)$,
+\begin{equation}
+ \boldsymbol{E}(\boldsymbol{u})=\mathbf{D}_{\varepsilon} \boldsymbol{u}+\boldsymbol{E}^{n l}(\boldsymbol{u}) 
+\end{equation}
+where  ${\bf D}_\varepsilon \bf u$ and $\bf E^\textnormal{nl}(u)$ are defined as follows (summation over $k = 1, 2, 3$).
+
+\begin{equation}
+    {{\bf{D}}_\varepsilon }{\bf{u}} = \left[ {\begin{array}{*{20}{c}}
+{{u_{1,1}}}\\
+{{u_{2,2}}}\\
+{{u_{3,3}}}\\
+{{u_{1,2}} + {u_{2,1}}}\\
+{{u_{2,3}} + {u_{3,2}}}\\
+{{u_{1,3}} + {u_{3,1}}}
+\end{array}} \right]\qquad {{\bf{E}}^{nl}}({\bf{u}}) = \left[ {\begin{array}{*{20}{l}}
+{1/2}{{u_{k,1}}}{{u_{k,1}}}\\
+{1/2}{{u_{k,2}}}{{u_{k,2}}}\\
+{1/2}{{u_{k,3}}}{{u_{k,3}}}\\
+{{u_{k,1}}}{{u_{k,2}}}{}\\
+{{u_{k,2}}}{{u_{k,3}}}{}\\
+{{u_{k,1}}}{{u_{k,3}}}{}
+\end{array}} \right]
+\end{equation}
+
+\section{Kinetics}
+
+Unlike the linear structural analysis, its non-linear counterpart requires that the dynamic or
+the static forces equilibrium be observed in the deformed configuration. This firstly calls for
+the evaluation of mass distribution which gives the relation between density in the current
+configuration $\rho_c$ and the one in the reference configuration $\rho$, with the help of determinant $|F|$ of the material deformation gradient
+\begin{equation}
+ \rho=|\boldsymbol{F}| \rho_{c} 
+ \label{eqn:5.18} 
+\end{equation}
+
+The forces equilibrium of a geometrically linear approximation, was obtained by pure kinetic analysis of a differential volume element. Analoguous analysis of a volume element in a deformed configuration gives us the \textsc{Cauchy} motion equation in the so called spatial or \textsc{Euler} formulation.
+\begin{equation}
+ \rho_{c} \ddot{u}=\operatorname{div} \sigma+\rho_{c} b \quad \forall \quad x \in \Omega 
+ \label{eqn:5.19} 
+\end{equation}
+$\operatorname{div} \sigma$ symbolises the tensor divergence of the real stresses or the Cauchy stress tensor, related
+to the current configuration. As the first description of this stress tensor might lead us to anticipate, this stress quantity is defined by a differential load in the current configuration, effecting
+a deformed surface element $da$, arbitrarily oriented with a normal vector $\bf n$ inside the body,
+leading to the consequence that the actual stresses occurring in the material can be described.
+
+It is of advantage to numerical conversion in structural mechanics to utilize the motion equation in the materialor Lagrange formulation. To perform this it is necessary to relate the Cauchy
+motion equation to the undeformed configuration. Multiplication of motion equation (\ref{eqn:5.19})
+by determinant of the material deformation gradient already transforms the density in the
+reference configuration, according to (\ref{eqn:5.18}).
+
+\begin{equation}
+ \begin{array}{ll}|\boldsymbol{F}| \rho_{c} \ddot{\boldsymbol{u}}=|\boldsymbol{F}| \operatorname{div} \boldsymbol{\sigma}+|\boldsymbol{F}| \rho_{c} \boldsymbol{b} & \rho \ddot{\boldsymbol{u}}=|\boldsymbol{F}| \operatorname{div} \boldsymbol{\sigma}+\rho \boldsymbol{b}\end{array} 
+ \label{eqn:5.20} 
+\end{equation}
+
+It remains to transform the middle term of the equation. Since this transformation requires the
+profound familiarity with non-linear continuum mechanics, we shall leave out the derivation
+procedure and resort to the related literature for the result. To clarify the outcome,we shall give the resulting identity in symbolic presentation and it component notation.
+\begin{equation}
+ |\boldsymbol{F}| \operatorname{div} \boldsymbol{\sigma}=\operatorname{DIV}(\boldsymbol{F} \cdot \boldsymbol{S}) \quad|\boldsymbol{F}| \frac{\partial \sigma_{i j}}{\partial x_{j}}=\frac{\partial\left(F_{i k} S_{k j}\right)}{\partial X_{j}} 
+ \label{eqn:5.21} 
+\end{equation}
+
+$DIV$ symbolises the divergence operator with respect to the reference configuration. Tensor
+$S$, which is here used for the first time, is the second \textbf{{Piola Kirchhoff}} stress tensor defined with respect to the reference configuration. It should be noted that the Piola Kirchhoff stress
+tensor $S$, unlike the Cauchy stress tensor $\sigma$, does not refer to actual stresses but to ’pseudo
+stresses’. They are defined with respect to the reference configuration by a differential load
+effecting a surface element of the reference configuration $dA$, which is oriented with a normal
+vector $N$ . Introduction of equation (\ref{eqn:5.21}) into equation (\ref{eqn:5.20}) eventually yields the material or the Lagrange formulation of impulse rule, that is, the \textsc{Cauchy} motion equation.
+\begin{equation}
+ \rho \ddot{\boldsymbol{u}}=\operatorname{DIV}(\boldsymbol{F} \cdot \boldsymbol{S})+\rho \boldsymbol{b} \quad \forall \quad \boldsymbol{X} \in \Omega 
+ \label{eqn:5.22} 
+\end{equation}
+
+In order to formulate a well-defined problem, it is necessary to supplement the impulse rule
+with the static or \textsc{Neumann} boundary condition.  It is possible to apply the procedure for derivation of equilibrium
+at the boundary, demonstrated in the geometrically linear case, to the deformed configuration
+\begin{equation}
+ \begin{array}{ccc}\sigma \cdot n=t^{\star} & \forall & x \in \Gamma_{\sigma}\end{array} 
+ \label{eqn:5.23} 
+\end{equation}
+and thereupon to transform it. Material formulation of the Neumann boundary conditions is
+in the geometrically non-linear case defined by
+\begin{equation}
+ \boldsymbol{F} \cdot \boldsymbol{S} \cdot \boldsymbol{N}=\boldsymbol{T}^{\star} \quad \forall \quad \boldsymbol{X} \in \Gamma_{\sigma} 
+ \label{eqn:5.24} 
+\end{equation}
+where N presents the normal vector of reference
+configuration. Stress vector $T$ (first Piola Kirchhoff stress tensor) is defined by a differential
+load vector of current configuration acting on a surface element of the reference configuration
+$dA$ parallel to $t^*$  .
+\begin{equation}
+ \boldsymbol{T}^{\star} d A=\boldsymbol{t}^{\star} d a 
+ \label{eqn:5.23} 
+\end{equation}
+
+%-----------------------------------------------------
+\section{Hyperelastic Materials \parencite{medium} \parencite{ref4}}
+\input{Page/Chap3/Hyperlastic Material/MainHyper}
+
+%--------------------------------------------------------
+\section{Strategies for Non-linear static structural equations \parencite{Advance} }
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.55]{Figure2/Chap3/local iteration.png}
+    \caption{Load parameter control $(\lambda_n \rightarrow r_{in})$ and local iteration (Newton-Raphson)}
+    \label{fig:7.1}
+\end{figure}
+We have non-linear vector equation
+\begin{equation}
+    \label{eqn:7.1} 
+    r_i(u)=r
+\end{equation}
+
+The procedures for solving equation (\ref{eqn:7.1}) consist of two components:
+\begin{itemize}
+    \item The control methods or control procedures describe the successive load application.
+    \item The iteration procedures serve the purpose of finding the equilibrium states for an incremental load change.
+\end{itemize}
+As shown in figure \ref{eqn:7.1}, the load application control is realized by controlling the load, the
+displacement or the so called arc length along the equilibrium path which characterises the
+equality of internal forces and external loads. The control of load application is accomplished
+by parametrization of equation (\ref{eqn:7.1}) with the load factor $\lambda$
+\begin{equation}
+ \boldsymbol{r}_{i}(\boldsymbol{u})=\lambda \boldsymbol{r} \quad[0, \lambda]=\bigcup_{n=1}^{N T} \lambda_{n+1}-\lambda_{n} 
+ \label{eqn:7.2} 
+\end{equation}
+where $\lambda$ is applied step-wise for the numerical transformation of the solution. The load steps induced in such a way are numbered in analogy with the time steps of transient problems, 
+with $n = 1,\ldots, NT$ . The equilibrium state corresponding to the load factor \lambda n , is described with displacements $u_n$ . This explains why with the numerical solution of the non-linear
+equation (7.1), only discrete supporting points of the path can be acquired, not the continuous
+equilibrium path. The number, the separation, and the arrangement of supporting points
+is determined by the control procedure which shall be derived in detail in chapter 7.3. The
+step-wise numerical solution from one supporting point to the other is accomplished for example
+by means of the pure Newton-Raphson method, the modified Newton-Raphson method
+or the Quasi-Newton methods. Starting from an equilibrium state characterised by the
+displacement state $u_n$ and the internal forces$ r _i (u_n ) $ calculable from that state, we numerically
+compute the equilibrium point for the load factor $\lambda_{ n+1} $, by means of solution $(u_{n+1} , r_i (u_{n+1} ))$.
+In figure 7.1, we see an example of the schematic presentation of equilibrium iteration of the
+load-controlled pure Newton-Raphson procedure of a one-dimensional non-linear equation
+$r_ i (u) = r$. The derivation and the numerical properties of this and the other methods are
+discussed in chapter \ref{chap:7.2}.
+%----------------------------------------------------------------------
+\section{Iteration Methods}
+\label{sec:7.2}
+\label{chap:7.2}
+All methods presented here are based on the multi-dimensional Taylor row expansion of the
+internal forces vector at a deformation state determined by the structural displacement vector
+$u ^k_{n+1}$
+\begin{equation}
+ r_{i}\left(\boldsymbol{u}_{n+1}^{k+1}\right)=\boldsymbol{r}_{i}\left(\boldsymbol{u}_{n+1}^{k}\right)+\frac{\partial \boldsymbol{r}_{i}\left(\boldsymbol{u}_{n+1}^{k}\right)}{\partial \boldsymbol{u}_{n+1}^{k}}\left(\boldsymbol{u}_{n+1}^{k+1}-\boldsymbol{u}_{n+1}^{k}\right)+\frac{1}{2} \frac{\partial^{2} \boldsymbol{r}_{i}\left(\boldsymbol{u}_{n+1}^{k}\right)}{\partial \boldsymbol{u}_{n+1}^{k 2}}\left(\boldsymbol{u}_{n+1}^{k+1}-\boldsymbol{u}_{n+1}^{k}\right)^{2}+\cdots 
+ \label{eqn:7.3} 
+\end{equation}
+
+The result of a Taylor row is approximated by the vector of internal forces of the displacement
+state $u^{k+1}_{n+1}$
+n+1 in the neighbourhood of point $u^{k}_{n+1}$ . It should be noted that the index $k$, used to designate both neighbouring displacement states, stands for the iteration index in dealing with the
+iteration procedure. To generate the iteration procedure, the Taylor row expansion is aborted
+after the linear term and the difference of both displacement states is termed displacement increment $\Delta u = u^{k+1}_{n+1}-u^{k}_{n+1}$.
+\begin{equation}
+ \boldsymbol{r}_{i}\left(\boldsymbol{u}_{n+1}^{k+1}\right)=\boldsymbol{r}_{i}\left(\boldsymbol{u}_{n+1}^{k}\right)+\frac{\partial \boldsymbol{r}_{i}\left(\boldsymbol{u}_{n+1}^{k}\right)}{\partial \boldsymbol{u}_{n+1}^{k}} \Delta \boldsymbol{u} 
+ \label{eqn:7.4} 
+\end{equation}
+
+The partial derivative of the system vector of internal forces with respect to the actual
+displacement state $u^ k_{n+1}$ contained in this equation is the tangential stiffness matrix of this state
+\begin{equation}
+ \boldsymbol{r}_{i}\left(\boldsymbol{u}_{n+1}^{k+1}\right)=\boldsymbol{r}_{i}\left(\boldsymbol{u}_{n+1}^{k}\right)+\mathbf{K}_{t}\left(\boldsymbol{u}_{n+1}^{k}\right) \Delta \boldsymbol{u} \qquad \qquad \Delta \boldsymbol{u}=\boldsymbol{u}_{n+1}^{k+1}-\boldsymbol{u}_{n+1}^{k} 
+\label{eqn:7.5} 
+\end{equation}
+
+ $K_t (u^ k_{n+1} \Delta u$ is identical to the linearization of the vector of
+internal forces $\Delta r_i(u^k_{n+1})$, so that the equation (\ref{eqn:7.5}) can be interpreted as incremental change
+of internal forces for an incremental change of the displacement state.
+%--------------------------------------------------------------------
+\subsection{Pure Newton-Raphson Method}
+\noindent
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.6]{Figure2/Chap3/Pure Newton-Raphson.png}
+    \caption{Pure Newton-Raphson Iteration}
+    \label{fig:7.2}
+\end{figure}
+The development of the vector of internal forces into a Taylor row according to equation (\ref{eqn:7.5}),
+and the requirement for fulfilment of the equilibrium relation (\ref{eqn:7.2}), comprise the basis of the
+Newton-Raphson method which was first published by Cauchy in 1847.
+\begin{equation}
+ \boldsymbol{r}_{i}\left(\boldsymbol{u}_{n+1}^{k+1}\right)=\boldsymbol{r}_{i}\left(\boldsymbol{u}_{n+1}^{k}\right)+\mathbf{K}_{t}\left(\boldsymbol{u}_{n+1}^{k}\right) \Delta \boldsymbol{u}=\lambda_{n+1} \boldsymbol{r} 
+ \label{eqn:7.8} 
+\end{equation}
+
+In this context, the displacement increment $\Delta u$ is often denoted as the Newton correction. As
+it will soon become clear, in the beginning of load step $n + 1$ we can set out from an equilibrium
+state.
+\begin{equation}
+    r_i(u_n)=\lambda _nr
+    \label{eqn:7.9}
+\end{equation}
+
+In order to locate the equilibrium for load factor $\lambda_{n+1}$ , we now demand that the approximation of internal forces of the deformation state $u_1^{n+1}$ , based on Taylor row expansion at the
+development point $u_n=u^0_{n+1}$ , fulfils the equilibrium relation at the end of the load step.
+\begin{equation}
+ \boldsymbol{r}_{i}\left(\boldsymbol{u}_{n+1}^{1}\right)=\boldsymbol{r}_{i}\left(\boldsymbol{u}_{n+1}^{0}\right)+\mathbf{K}_{t}\left(\boldsymbol{u}_{n+1}^{0}\right) \Delta \boldsymbol{u}=\lambda_{n+1} \boldsymbol{r} 
+ \label{eqn:7.10} 
+\end{equation}
+
+The solution of this equation yields the displacement increment, which gives the approximation
+of solution $(u^1_{ n+1} )$ with equation (\ref{eqn:7.5}).
+\begin{equation}
+ \Delta \boldsymbol{u}=\mathbf{K}_{t}^{-1}\left(\boldsymbol{u}_{n+1}^{0}\right)\left(\lambda_{n+1} \boldsymbol{r}-\boldsymbol{r}_{i}\left(\boldsymbol{u}_{n+1}^{0}\right)\right) \quad \boldsymbol{u}_{n+1}^{1}=\boldsymbol{u}_{n+1}^{0}+\Delta \boldsymbol{u} 
+ \label{eqn:7.11} 
+\end{equation}
+
+Generally, the first calculation step of an iteration method is termed predictor. The quality of
+solution u 1 n+1 can be evaluated by means of the so called residuum $ \lambda_{n+1} r-\boldsymbol{r}_{i}\left(\boldsymbol{u}_{n+1}^{1}\right) $
+. In the
+case of equilibrium which is attainable only hypothetically, the residuum vanishes. In order to
+close in on this hypothetical ideal case, we can repeat the procedure defined by equations (\ref{eqn:7.10})
+and (\ref{eqn:7.11} for calculating the displacement vector $u^2_ {n+1} $ based on $u ^1_{ n+1}$ . The displacement
+vector $u_{n+1}^{k+1}$
+is generally calculated based on the approximated solution $u ^k_{n+1} $. The method
+for iterative solution of the non-linear vector equation (\ref{eqn:7.2}) generated by this is the pure
+Newton-Raphson procedure, or shortly Newton-Raphson method. The updating relation,
+described as corrector, and the resulting improvement of the solution vector $ u ^{k+1}_{n+1}$ follow from
+transformation of equation (\ref{eqn:7.8}), having in mind the definition of the displacement increment
+$\Delta u$.
+\begin{equation}
+ \Delta \boldsymbol{u}=\mathbf{K}_{t}^{-1}\left(\boldsymbol{u}_{n+1}^{k}\right)\left(\lambda_{n+1} \boldsymbol{r}-\boldsymbol{r}_{i}\left(\boldsymbol{u}_{n+1}^{k}\right)\right) \qquad \boldsymbol{u}_{n+1}^{k+1}=\boldsymbol{u}_{n+1}^{k}+\Delta \boldsymbol{u} 
+ \label{eqn:7.12} 
+\end{equation}
+
+The procedure of solution improvement according to (\ref{eqn:7.12}) is repeated until the equilibrium is
+reached approximately (see figure \ref{fig:7.2}). Here it should be stressed that the exact equilibrium
+cannot be reached. Since this is a vector-value problem, we generate a scalar-valued criterion, a so called convergence criterion in order to judge whether a sufficient accuracy of the equilibrium
+approximation is reached.  If the criterion is fulfilled, (here, because of completeness of
+derivations, as example the criterion
+\begin{equation}
+ \eta_{u}^{k+1}=\frac{\|\Delta \boldsymbol{u}\|}{\left\|\boldsymbol{u}_{n+1}^{k+1}-\boldsymbol{u}_{n}\right\|} \leq \eta_{u} 
+\label{eqn:7.13} 
+\end{equation}
+is given as an example ($\eta$ u is given by the user) the solution $u^{k+1}_{n+1}$ is approximated accurately
+enough and the next load step can be solved analogously.
+
+The pure Newton-Raphson method has the following properties
+\begin{itemize}
+    \item The pure Newton-Raphson method converges to a solution if the start vector $u^0_{ n+1} $ is close enough to the solution.
+    \item The pure Newton-Raphson method converges locally quadratic.
+\end{itemize}
+
+The condition for convergence of the Newton-Raphson method can be fulfilled by successive loading of the structure. If convergence is not reached, the load step must be smaller. We
+can, for example, adapt the size of the load step based on the convergence behaviour, which guaranties the convergent pursuit of the equilibrium path within the
+scope of a non-linear FEM analysis. It remains to clarify the notion of local quadratic convergence. Local means that the quadratic convergence is reached in the vicinity of solution, which
+practically means in the last one to two steps. The convergence rate describes the number of
+necessary iterations, the higher the convergence rate, the less iteration steps are needed to solve
+the non-linear equilibrium. It can be determined by means of evolution of the displacement
+increment. The convergence rate ... is defined by the following equation (see equation (\ref{eqn:7.13})).
+
+If the displacement increment decreases by the square, we talk about a quadratic convergence.
+
+With the pure Newton-Raphson method we have presented the standard tool of modern non-
+linear FEM analysis. We can grade it as robust in connection with suitable procedures for load
+parameter control. For solution of larger systems with a correspondingly higher number of DOF,
+this method however has proven to be very computation-time-consuming, since in each iteration
+step a linear equation system (\ref{eqn:7.12}) must be solved. In order to circumvent this equation solution, which often needs to be performed and on top of that is costly, methods were developed which
+approximate the deformation-dependent tangential stiffness matrix or its inverse. One of these
+methods is the modified Newton-Raphson method; an entire group of such methods comprise
+the Quasi-Newton procedures.
+%----------------------------------------------------------
+\subsection{Modified Newton-Raphson Method}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.55]{Figure2/Chap3/Modified Newton-Raphson Iteration.png}
+    \caption{Modified Newton-Raphson Iteration}
+    \label{fig:7.3}
+\end{figure}
+
+The development of the modified Newton-Raphson method requires that we replace, in
+equation (\ref{eqn:7.12}), the deformation-dependent tangential stiffness matrix, which therefore must be generated anew in each step, with the tangential stiffness matrix $K_t (u^ k_{n+1} )$ of the last known equilibrium state $K_t (u _n ) = K_t (u^0_{ n+1} )$ which is constant throughout the iteration.
+\begin{equation}
+ \Delta u=\mathbf{K}_{t}^{-1}\left(u_{n+1}^{0}\right)\left(\lambda_{n+1} r-r_{i}\left(u_{n+1}^{k}\right)\right) \qquad  \qquad u_{n+1}^{k+1}=u_{n+1}^{k}+\Delta u
+ \label{eqn:7.14} 
+\end{equation}
+\section{Control of iteration procedures}
+Now we must develop strategies for controlling the load
+parameter $\lambda$. The latter globally controls the successive load increase, and, within the scope of
+arc-length procedures and the displacement-controlled calculus, locally the applied external load
+($\lambda n+1$ is altering with $k$).
+
+The simplest possibility to control the loads acting on the system is the step-wise increase of the load with each load step $n$. This external load is constant during the equilibrium iteration which ensures the attainment of equilibrium state correlated to the corresponding load $\lambda_ {n+1}$ , after successful iteration. The equilibrium path and the equilibrium states obtained in the scope of
+load-controlled pure Newton-Raphson iterations were already sketched in figure \ref{fig:7.1}, showing a
+one-dimensional NEQ = 1) example. By combining the load control and the iteration procedures
+presented in chapter \ref{sec:7.2}, the following algorithms for numerical solution of non-linear vector
+equation (\ref{eqn:7.1}) are generated:
+\begin{itemize}
+    \item In connection with the pure Newton-Raphson method the algorithm sketched in the
+box below should be used.
+\item In the iteration step $k = 0$, the vector of internal forces is given according to equation (\ref{eqn:7.2}) with $ \boldsymbol{r}_{i}\left(\boldsymbol{u}_{n+1}^{0}\right)=\lambda_{n} \boldsymbol{r} $, assumming that the system is in equilibrium at the beginning of the
+load step. Further we can drop the check of the convergence criterion since the solution
+after one iteration step is the correct one only in the linear case. This makes the pure
+Newton-Raphson method easier to arrange with less numerical effort, if the algorithm
+is executed as a predictor-corrector method.
+\item The algorithm of the modified Newton-Raphson method differs from the predictor-
+corrector formulation of the original method as follows: inversion of tangent stiffness in
+the predictor is accomplished by means of triangle projection, in the corrector the tangent
+does not need to be calculated, and instead of inversion of up-to-date tangential stiffness,
+the back-substitution with the triangle-projected tangent $K_t (u^0_{n+1} ) $ comes into play.
+\item In comparison to the modified Newton-Raphson method, the inverse tangential stiffness matrix in
+the predictor should be stored and the approximated inverse of tangential stiffness matrix
+in the corrector should be updated. The back-substitution is replaced by multiplication of the right equation side with the approximated inverses of the tangential stiffness matrix.
+
+\end{itemize}
+
+%them bang o day
+\begin{framed}
+Load step loop $n = 0, NT - 1$ \\
+\hspace*{5mm} Generation of external loads $\lambda{ n+1} r$, Pre-described displacements $u^0_{ n+1} = u _n$\\
+\hspace*{6mm}Iteration step loop $k = 0: end$ \\
+\hspace*{12mm}Calculation of internal forces $ \boldsymbol{r}_{i}\left(\boldsymbol{u}_{n+1}^{k}\right) $ \\
+\hspace*{12mm}Calculation of internal forces $ r_{i}\left(\boldsymbol{u}_{n+1}^{k}\right) $ \\ 
+\hspace*{12mm}Calculation of tangential stiffness matrix $ \mathbf{K}_{t}\left(\boldsymbol{u}_{n+1}^{k}\right) $\\
+\hspace*{12mm}Calculation of increment $ \Delta \boldsymbol{u}=\mathbf{K}_{t}^{-1}\left(\boldsymbol{u}_{n+1}^{k}\right)\left(\lambda_{n+1} r-\boldsymbol{r}_{i}\left(\boldsymbol{u}_{n+1}^{k}\right)\right) $\\
+\hspace*{12mm}Updating of displacements $ \boldsymbol{u}_{n+1}^{k+1}=\boldsymbol{u}_{n+1}^{k}+\Delta \boldsymbol{u} $\\
+\hspace*{12mm}Convergence criterion check, e.g. $ \eta_{u}^{k+1} \leq \eta_{u} $\\
+ \hspace*{6mm}$ k+1 \longrightarrow k $\\
+$ n+1 \longrightarrow n $
+\end{framed}
+
+Figures \ref{fig:7.5} and \ref{fig:7.6} show the results of the pure Newton-Raphson and the modified Newton-
+Raphson method within the scope of a load controlled analysis of a one-dimensional (NEQ = 1)
+example
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.6]{Figure2/Chap3/load control and pure Newton-Raphson.png}
+    \caption{Combination of load control and pure Newton-Raphson method}
+    \label{fig:7.5}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.6]{Figure2/Chap3/load control and modified Newton-Raphson.png}
+    \caption{Combination of load control and modified Newton-Raphson iteration}
+    \label{fig:7.6}
+\end{figure}

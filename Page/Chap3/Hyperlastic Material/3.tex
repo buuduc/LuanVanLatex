@@ -1,0 +1,31 @@
+\begin{equation}
+ I_{1}=\operatorname{tr}(\mathbf{C})=\lambda_{1}^{2}+\lambda_{2}^{2}+\lambda_{3}^{2} 
+     \label{eqn:3.101}
+ \end{equation}
+ \begin{equation}
+ \label{eqn:3.102}
+ I_{2}=\frac{1}{2}\left[(\operatorname{tr} \mathbf{C})^{2}-\operatorname{tr}\left(\mathbf{C}^{2}\right)\right]=\lambda_{1}^{2} \lambda_{2}^{2}+\lambda_{2}^{2} \lambda_{3}^{2}+\lambda_{3}^{2} \lambda_{1}^{2} 
+\end{equation}
+and
+\begin{equation}
+\label{eqn:3.103}
+ I_{3}=\operatorname{det} \mathbf{C}=\lambda_{1}^{2} \lambda_{2}^{2} \lambda_{3}^{2} 
+\end{equation}
+where $ \lambda_{1}^{2}, \lambda_{2}^{2} $, and $ \lambda_{3}^{2} $ are three eigenvalues of the right Cauchy-Green deformation tensor C. From polar decomposition, it has been shown that $ \lambda_{1}, \lambda_{2} $, and $ \lambda_{3} $ are three eigenvalues of the left stretch tensor $ \mathbf{U}- $ also called the principal stretches. The above three invariants will remain unchanged for different coordinate systems. In order to be a valid deformation, the three invariants must be positive (refer to Example 3.1). The square root of $ I_{3} $ in Eq. (\ref{eqn:3.103}) measures the volume change of the material. If the material is incompressible, it is clear that $ I_{3}=1 $. The three invariants are identical for both the left and right Cauchy-Green deformation tensors. When there is no deformation, i.e., $ \lambda_{1}=\lambda_{2}=\lambda_{3}=1, I_{1}=I_{2}=3 $, and $ I_{3}=1 $.
+
+\textit{Example}: (Invariants) Show that the three invariants of the left Cauchy-Green deformation tensor $ \mathbf{b} $ are equal to those of $ \mathbf{C} $ when the three eigenvalues of the deformation gradient are $ \lambda_{1}, \lambda_{2} $, and $ \lambda_{3} $.
+
+
+
+Solution The three invariants will remain constant for different coordinate systems. Thus, it is possible to choose the three principal directions of the deformation gradient as basis vectors for the new coordinate system $ X^{\prime} Y^{\prime} Z^{\prime} $ so that the deformation gradient will only have diagonal components:
+\begin{equation*}
+ \mathbf{F}_{X^{\prime} Y^{\prime} Z^{\prime}}=\left[\begin{array}{ccc}\lambda_{1} & 0 & 0 \\ 0 & \lambda_{2} & 0 \\ 0 & 0 & \lambda_{3}\end{array}\right] 
+\end{equation*}
+
+Then the right and left Cauchy-Green deformation tensors become identical
+
+\begin{equation}
+ \mathbf{C}_{X^{\prime} Y^{\prime} Z^{\prime}}=\left(\mathbf{F}^{\mathrm{T}} \mathbf{F}\right)_{X^{\prime} Y^{\prime} Z^{\prime}}=\left[\begin{array}{ccc}\lambda_{1}^{2} & 0 & 0 \\ 0 & \lambda_{2}^{2} & 0 \\ 0 & 0 & \lambda_{3}^{3}\end{array}\right], \mathbf{b}_{X^{\prime} Y^{\prime} Z^{\prime}}=\left(\mathbf{F} \mathbf{F}^{\mathrm{T}}\right)_{X^{\prime} Y^{\prime} Z^{\prime}}=\left[\begin{array}{ccc}\lambda_{1}^{2} & 0 & 0 \\ 0 & \lambda_{2}^{2} & 0 \\ 0 & 0 & \lambda_{3}^{2}\end{array}\right] 
+\end{equation}
+and the three invariants of the two tensors are identical.
+

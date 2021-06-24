@@ -1,0 +1,36 @@
+at hand. Algorithms for coupled problems, like staggered schemes, depend on the type of coupling and thus have to be designed with special care regarding robustness and efficiency. In the following we will sketch some of the global algorithms which are mainly applied to contact problems.
+
+The update algorithms for the contact stresses, especially the tangential stresses due to friction, have been settled. In this case the so called projection methods or return mapping schemes yield the most efficient and robust treatment. Due to the fact that a algorithmic tangent operator can be constructed this technique can be incorporated in a Newton-Raphson scheme.
+
+\subsection{ Global Algorithms}
+
+The algorithm which is applied in many standard finite element programs is related to the penalty method. This is mainly due to its simplicity and furthermore it yields for many applications a robust algorithm. The penalty method is mostly combined with an active set strategy. The global set of equations is given in $ (\ref{eqn:4.70}) $. Now the algorithm for the penalty method can be summarized in here \\
+\begin{framed}
+Initialize algorithm \\
+\ set: $ \mathbf{v}_{1}=\mathbf{0}, \quad \epsilon_{N}=\epsilon_{0} $\\
+\hspace*{6mm} LOOP over iterations: $ i=1, \ldots $, convergence \\
+\hspace*{10mm} Check for contact: $ g_{N s_{i}} \leq 0 \rightarrow $ active node, segment or element \\
+ \hspace*{10mm} Solve: $ \mathbf{G}_{c}\left(\mathbf{v}_{i}\right)=\mathbf{G}\left(\mathbf{v}_{i}\right)+\cup_{s=1}^{n_{c}} \mathbf{G}_{s}^{c}\left(\mathbf{v}_{i}\right)=\mathbf{0} $ \\
+ \hspace*{10mm} Check for convergence: $ \left\|\mathbf{G}_{c}\left(\mathbf{v}_{i}\right)\right\| \leq T O L \Rightarrow $ END LOOP \\
+\hspace*{6mm}  END LOOP 
+\\ update penalty parameter: $ \epsilon_{N} $
+\end{framed}
+
+
+Usually the solution of $ \mathbf{G}_{c}(\mathbf{v})=\mathbf{0} $ is performed by a Newton-Raphson iteration leading to
+\begin{equation}
+\label{eqn:4.72}
+\begin{aligned}
+D \mathbf{G}_{c}\left(\mathbf{v}_{i}^{n}\right) \Delta \mathbf{v}_{i}^{n+1} &=-\mathbf{G}_{c}\left(\mathbf{v}_{i}^{n}\right) \\
+\mathbf{v}_{i}^{n+1} &=\mathbf{v}_{i}^{n}+\Delta \mathbf{v}_{i}^{n+1}
+\end{aligned}
+\end{equation}
+
+where the operator $ D $ denotes the directional derivative of the vector $ \mathbf{G}_{c}\left(\mathbf{v}_{i}^{n}\right) $ which results in the tangent matrix $ \mathbf{K}_{T}\left(\mathbf{v}_{i}^{n}\right)=D \mathbf{G}_{c}\left(\mathbf{v}_{i}^{n}\right) $. The iteration index $ n $ is related to the Newton loop to solve $ \mathbf{G}_{c}\left(\mathbf{v}_{i}\right)=\mathbf{0} $ in Box 1 . Often the active set strategy, stated in Box 1, is accelerated in such a way that the update of the active set of contact constraints is performed within each step in the Newton iteration. Then the iteration $ (72) $ yields
+\begin{equation}
+\label{eqn:4.73}
+ \begin{aligned} D \mathbf{G}_{c}\left(\mathbf{v}_{i}\right) \Delta \mathbf{v}_{i+1} &=-\mathbf{G}_{c}\left(\mathbf{v}_{i}\right) \\ \mathbf{v}_{i+1} &=\mathbf{v}_{i}+\Delta \mathbf{v}_{i+1} \end{aligned} 
+\end{equation}
+which is considerably faster. However this procedure might not converge for all cases and thus has to be applied with care.
+
+Within this algorithm, an increase of the penalty parameter is necessary when the final result shows visible penetrations and thus does not fulfill the constraint equation $ g_{n+}=0 $ in a correct way. On the other hand a penalty parameter which has been chosen

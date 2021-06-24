@@ -1,0 +1,53 @@
+\begin{equation}
+\label{eqn:4.59}
+\mathbf{N}_{s}=\left\{\begin{array}{c}\mathbf{n}^{2} \\ -(1-\bar{\xi}) \mathbf{n}^{2} \\ -\bar{\xi} \mathbf{n}^{2}\end{array}\right\}, \quad
+ \mathbf{N}_{0 s}=\left\{\begin{array}{c}\mathbf{0} \\ -\mathbf{n}^{2} \\ \mathbf{n}^{2}\end{array}\right\}_{s} 
+\end{equation}
+and
+\begin{equation}
+\label{eqn:4.60}
+\mathbf{T}_{s}=\left\{\begin{array}{c}
+\mathbf{a}_{1}^{2} \\
+-(1-\bar{\xi}) \mathbf{a}_{1}^{2} \\
+-\bar{\xi} \mathbf{a}_{1}^{2}
+\end{array}\right\}, \quad \mathbf{T}_{0 s}=\left\{\begin{array}{c}
+\mathbf{0} \\
+-\mathbf{a}_{1}^{2} \\
+\mathbf{a}_{1}^{2}
+\end{array}\right\}
+\end{equation}
+
+Thus the virtual mechanical work $ (55) $ of the contact element can be written in the matrix formulation $ \boldsymbol{\eta}^{T} \mathbf{G}_{s}^{c} $ with the contact element residual
+\begin{equation}
+\label{eqn:4.61}
+\mathbf{G}_{s}^{c}=P_{N s} \mathbf{N}_{s}+T_{T s}\left(\mathbf{T}_{s}+\frac{g_{N s}}{l} \mathbf{N}_{0 s}\right)
+\end{equation}
+
+Due to this approach a pure displacement formulation of the contact problem is possible by expressing $ P_{N s} $ either through (13) or (15) or by the penalty relation $ P_{N s}=\epsilon_{N} g_{N s} $. This is in contrast to the Lagrangian multiplier technique, where $ P_{N s}=\lambda_{N s} . $ But we observe that this discretization can be applied to both methods. In case of the augmented Lagrangian method we have to replace $ P_{N s} $ in $ (61) $ by
+\begin{equation}
+\label{eqn:4.62}
+ P_{N s}^{\text {new }}=\bar{P}_{N s}^{o l d}+\epsilon_{N}\left\{g_{N s}^{n e w}-\left[\zeta-d\left(P_{N s}^{o l d}\right)\right]\right\} 
+\end{equation}
+ $ g_{N s} $ is given by $ (\ref{eqn:4.51}) $. 
+
+Often a Newton-Raphson iteration is used to solve the global set of equations. Then the linearization of $ (\ref{eqn:4.61}) $ is needed to achieve quadratic convergence near the solution point. The associated derivation is a little bit cumbersome and thus only the final results will be summarized for this discretization. 
+
+The tangent matrix for the normal contact is derived from the term $ \delta g_{N s} P_{N s}^{\prime} $ in $ (\ref{eqn:4.55}) $. Note that in $ (\ref{eqn:4.52}) $ the change in $ \bar{\xi} $ has be considered as well as the change of the normal $ \mathbf{n}^{2} $. For the penalty approach with $ P_{N s}=\epsilon_{N} g_{N s} $ we obtain the tangent matrix
+
+
+
+$ \mathbf{K}_{N s}^{c}=\epsilon_{N}\left[\mathbf{N}_{s} \mathbf{N}_{s}^{T}-\frac{g_{N s}}{l}\left(\mathbf{N}_{0 s} \mathbf{T}_{s}^{T}+\mathbf{T}_{s} \mathbf{N}_{0 s}^{T}+\frac{g_{N s}}{l} \mathbf{N}_{0 s} \mathbf{N}_{0 s}^{T}\right)\right] $
+
+
+
+The used matrices have been defined in $ (\ref{eqn:4.59}) $ and $ (\ref{eqn:4.60}) $. Note that in a geometrically linear case all terms vanish which are multiplied by $ g_{N s} . $ This gives the simple matrix $ \mathbf{K}_{N s}^{L c}=\epsilon_{N} \mathbf{N}_{s} \mathbf{N}_{s}^{T} $
+
+For the tangential contributions in the contact area we have to linearize the term $ \delta g_{T s} T_{T s} $ in $ (\ref{eqn:4.55}) $.
+\begin{equation}
+ \label{eqn:4.64}   
+ \begin{aligned} \mathbf{K}_{T s}^{c}=c_{T}\{&\left(\mathbf{T}_{s}+\frac{g_{N s}}{l} \mathbf{N}_{0 s}\right)\left(\mathbf{T}_{s}+\frac{g_{N s}}{l} \mathbf{N}_{0 s}\right)^{T} \\ &+\frac{g_{N s}}{l}\left[\mathbf{N}_{0 s} \mathbf{N}_{s}^{T}+\mathbf{N}_{s} \mathbf{N}_{0 s}^{T}-\mathbf{T}_{0 s} \mathbf{T}_{s}^{T}-\mathbf{T}_{s} \mathbf{T}_{0 s}^{T}\right.\\ &\left. \left.-2 \frac{g_{N s}}{l}\left(\mathbf{N}_{0 s} \mathbf{T}_{0 s}^{T}+\mathbf{T}_{0 s} \mathbf{N}_{0 s}^{T}\right)\right]\right\} \end{aligned} 
+\end{equation}
+
+
+
+Also in this case all terms containing $ g_{N s} $ disappear in a geometrically linear situation which yields $ \mathbf{K}_{T s}^{L c}=c_{T} \mathbf{T}_{s} \mathbf{T}_{s}^{T} . $ The case of frictional slip leads to an additional contribution in $ (\ref{eqn:4.64}) $ .

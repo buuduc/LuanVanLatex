@@ -1,0 +1,29 @@
+too large can lead to ill-conditioning of the equation system and thus has to be reduced to avoid this. On possibility for the choice of $ \epsilon_{N} $ is to relate the penalty parameter to the bulk modulus of the contacting bodies. However, since it is quite hard to estimate the penalty parameter for all cases it makes sense to apply the augmented Lagrangian technique.
+
+Augmented Lagrangian technique are usually applied together with Uzawa type algorithms, see Bertsekas (1984), Glowinski, Le Tallec (1984) or Laursen, Simo (1991), which lead to an inner loop for the contact and an outer loop for the update of the Lagrangian parameters.
+
+
+
+Let us remark that it is standard practice in augmented Lagrangian iterations also to update the penalty number $ \epsilon_{N} $ in order to obtain good convergence, see Bertsekas (1984). This is due to the fact that a small penalty parameter leads to very slow convergence since the update formula (42) is of first order and the contact forces due to the penalty are small. Thus it makes sense to increase the penalty parameter within a contact element $ s $ according to an update scheme, see Bertsekas (1984). Here we like to show this approach for the augmented Lagrangian scheme in combination with constitutive interface laws like (13). The update scheme yields
+\begin{equation}
+\label{eqn:4.74}
+ \epsilon_{N s n+1}=\left\{\begin{array}{ll}10 \cdot \epsilon_{N s n} & \text { for }\left[c_{+}\left(\mathbf{V}_{s}, \bar{P}_{N s}\right)\right]_{n+1}>\frac{1}{4} \cdot\left[c_{+}\left(\mathbf{V}_{s}, \bar{P}_{N s}\right)\right]_{n} \text { and } \epsilon_{N s n} \leq \frac{k}{\sqrt{N t}} \\ \epsilon_{N s n} & \text { for }\left[c_{+}\left(\mathbf{V}_{s}, \bar{P}_{N s}\right)\right]_{n+1} \leq \frac{1}{4} \cdot\left[c_{+}\left(\mathbf{V}_{s}, \bar{P}_{N s}\right)\right]_{n}\end{array}\right. 
+\end{equation}
+
+In relation (\ref{eqn:4.74}) also a stopping criterion for the update of the penalty parameter has been introduced to avoid ill-conditioning. This is given by the estimate (39). The global augmented Lagrangian algorithm is shown in box bellow. Here we use again the discrete formulation (70) which has to be adjusted to incorporate the fixed Lagrangian parameters $ \bar{P}_{N s} $, see $ (62) $ for the node-to-segment discretization. By $ \cup_{s=1}^{n_{c}} \mathbf{G}_{s n+1}^{a}\left(\mathbf{v}, \bar{P}_{N s}\right) $ we denote the contribution of the fourth term in (41) for an active contact element $ s $.
+\begin{framed}
+    Initialize algorithm\\
+    set: $ d_{0}=\xi, \quad \mathbf{v}=\mathbf{0}, \quad \bar{P}_{0}=0, \quad \epsilon_{N}=\epsilon_{N 0} $\\
+LOOP over augmentations: $ n=1, . . $, convergence \\
+\hspace*{6mm} LOOP over iterations : $ i=1, . . $  convergence\\
+\hspace*{10mm} Solve: $ \mathbf{G}_{c}\left(\mathbf{v}_{i},\\ \bar{P}_{N_{n}}\right)=\mathbf{G}\left(\mathbf{v}_{i}\right)+\cup_{s=1}^{n_{c}} \mathbf{G}_{s n+1}^{a}=\mathbf{0} $\\
+\hspace*{10mm} Check for convergence: $ \left\|\mathbf{G}_{c}\left(\mathbf{v}_{i}, \bar{P}_{N_{n}}\right)\right\| \leq T O L \Rightarrow $  END LOOP\\
+\hspace*{6mm} END LOOP\\
+\hspace*{6mm} LOOP over contact nodes : $s = 1,\dots, n_c$\\
+\hspace*{10mm} Update: $\bar{P}_{N_{s} n+1}$ according to $(62)$ \\
+\hspace*{10mm} Update: $d_{s n+1}=h\left(\bar{P}_{N_{s n+1}}\right)$ according to (12) \\
+\hspace*{10mm} Update: $\epsilon_{N s n+1}$ according to $(74)$\\
+\hspace*{10mm} Check for convergence: $ \frac{1}{\zeta}\left\|g_{N_{+}}\left(\mathbf{V}_{s i}\right)-\left(\zeta-d_{n+1}\right)\right\| \leq T O L \Rightarrow S T O P $\\
+\hspace*{6mm} END LOOP\\
+END LOOP \\ 
+\end{framed}

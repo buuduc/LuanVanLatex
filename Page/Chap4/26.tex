@@ -1,0 +1,34 @@
+ The evaluation of these integrals by the trapezoidal rule yields the simple formulas
+\begin{equation}
+\begin{aligned}
+\bar{\lambda}_{N} \int_{0}^{1}\left[\boldsymbol{\eta}^{1}(\xi)-\boldsymbol{\eta}^{2}(\xi)\right] \cdot \mathbf{n}(\xi)\left\|\frac{d \Gamma}{d \xi}\right\| d \xi & \approx \frac{1}{2} \bar{\lambda}_{N}\left(\left.\delta g_{N}\right|_{\xi=0}+\left.\delta g_{N}\right|_{\xi=1}\right) \\
+\bar{\lambda}_{N} & \approx \frac{\epsilon_{N}}{2}\left(\left.g_{N}\right|_{\xi=0}+\left.g_{N}\right|_{\xi=1}\right)
+\end{aligned}
+\label{eqn:4.69}
+\end{equation}
+where $ g_{N} $ and $ \delta g_{N} $ can be expressed by the quantities in equations $ (\ref{eqn:4.65}) $ and $ (\ref{eqn:4.66}) $. This completes the discretization for contact segments. 
+
+
+\subsection{ Global Set of Equations}
+For a global algorithmic treatment we have to state the discrete set of equations. This leads for the penalty method to the general matrix formulation of the weak form
+\begin{equation}
+\mathbf{G}_{c}^{p}(\mathbf{v})=\mathbf{G}(\mathbf{v})+\cup_{s=1}^{n_{c}} \mathbf{G}_{s}^{c}(\mathbf{v})=\mathbf{0}
+\label{eqn:4.70}
+\end{equation}
+where $ \mathbf{G}(\mathbf{v}) $ denotes the contributions of the bodies due to the weak form (43). In the second term $ s $ is associated with the active contact element, node or segment and $ \mathbf{G}_{s}^{c}(\varphi) $ has to be computed according to the chosen discretization, see previous sections. For the Lagrangian multiplier method the set of equations yields
+\begin{equation}
+\begin{array}{l}
+\mathbf{G}_{c}^{1}(\mathbf{v}, \boldsymbol{\lambda})=\mathbf{G}(\mathbf{v})+\cup_{s=1}^{n_{c}} \mathbf{C}_{s}^{l}(\mathbf{v})^{T} \lambda_{s}=\mathbf{0} \\
+\mathbf{G}_{c}^{2}(\mathbf{v}, \boldsymbol{\lambda})=\quad \cup_{s=1}^{n_{c}} \mathbf{C}_{s}^{g}(\mathbf{v}) \quad=\mathbf{0}
+\end{array}
+\label{eqn:4.71}
+\end{equation}
+
+Here the matrix $ C_{s}^{l}(\mathbf{v}) $ is related to the variation of $ \delta g_{s} $, see e.g. $ (\ref{eqn:4.68})_{1} $, and $ \mathbf{C}_{s}^{g}(\mathbf{v}) $ denotes the matrix formulation of the gap function $ g_{s} $ itself, see e.g. $ (\ref{eqn:4.68})_{2} $. These matrices also depend on the chosen discretization and are ment to contain not only the terms of the normal contact as indicated in (\ref{eqn:4.68}) but also the terms due to friction.
+
+In case that Newton type methods are employed to solve $ (\ref{eqn:4.70}) $ or $ (\ref{eqn:4.71}) $ a linearization of the discrete set of equations has to be performed. Especially in the large deformation case the change in the normal has to be taken into account. 
+\section{ ALGORITHMS FOR CONTACT PROBLEMS}
+
+In this section we consider the algorithms which are essential for the treatment of contact problems. In general we have to distinguish between global algorithms which are necessary to find the correct number of active constraint equations and local algorithms which are needed to update contact stresses within the constitutive equations in the interface. Furthermore, also algorithms have to be deviced for coupled problems which may be necessary in case of thermomechanical coupling or for fluid-structure interaction problems.
+
+The bandwidth of the global algorithms for constraint optimization is very broad. We like to mention, see also the introductory remarks, the simplex method, active set strategies, sequential quadratic programming, penalty and augmented Lagrangian techniques as well as barrier methods. All these techniques have advantages and disadvantages concerning efficiency, accuracy or robustness and thus have to be applied according to the problem

@@ -1,0 +1,29 @@
+\subsection{Nearly Incompressible Hyperelasticity}
+Incompressibility of a material can cause many difﬁculties in the constitutive
+relation, especially when it is combined with nonlinearities such as large displace-
+ments, large strains, and contact. Perfect incompressibility, which corresponds to
+Poisson’s ratio of one-half, is an idealization to make modeling more amenable for
+obtaining closed-form solutions. In the real world, natural as well as ﬁlled rubbers
+are slightly compressible, thereby, facilitating development of algorithms for nearly
+incompressible behavior of elastomers. “Near-incompressibility” means that
+Poisson’s ratio is not exactly one-half, but close to it. For example, 0.49 or higher
+values are often used for the nearly incompressible behavior of elastomers.
+
+As discussed previously, the hydrostatic pressure portion of stress causes volume
+change (dilatation). However, if the material is incompressible, the volume remains
+constant for different values of pressure. In other words, stress cannot be obtained
+by differentiating the strain energy density because the hydrostatic pressure portion
+of stress cannot be determined from deformation.
+
+It has been observed from experiments that many rubberlike materials show
+nearly incompressible properties. It means that only a small volume change occurs
+under a large hydrostatic pressure. In such materials, the near-incompressibility can
+be imposed by using a large bulk modulus, which relates hydrostatic pressure to
+volumetric strain. Since the material is stiff in dilatation and soft in distortion, it is
+necessary to separate these two parts in order to reduce numerical difﬁculties
+associated with a large difference in stiffness. This has to be done in the level of
+strain energy density.
+
+In the previous section, it is discussed that the third invariant $I _3$ is related to
+dilatation, while the other two invariants, $I_ 1$ and $I _2$ , are related to distortion.
+However, $I _1$ and $I _2$ do not remain constant during dilatation

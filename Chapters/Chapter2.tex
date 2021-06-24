@@ -1,0 +1,97 @@
+\chapter{ FEM - Theoretical Foundations and Applications } % Main chapter title
+
+\label{Chapter2 } % For referencing the chapter elsewhere, use \ref{Chapter1} 
+% \setlength{\parskip}{0.38cm}
+
+%----------------------------------------------------------------------------------------
+
+\section{Elasticity theory and applications \parencite{ref5}}
+Theory of Elasticity presents the theory of stress, deformation and displacement analysis in elastic bodies of different shapes, It is subjected to external causes such as loads, temperature changes, etc. .
+%----------------------------------------------------------------------------------------
+\input{Subsection/ElasticityTheory}
+%-----------
+\section{Finite Element Method (FEM) \parencite{ref4}}
+In general, it is difficult to find an analytic solution that satisfies the variational
+equation in the previous section. Instead, the FEM divides the entire domain into a
+set of simple sub-domains or finite elements. The finite elements are connected with
+adjacent elements by sharing their nodes. Then within each finite element, the
+solution is approximated in a simple polynomial form.
+\vspace{0.38cm}
+\newline
+FEMs for structural analysis require knowledge of the behavior of each element
+in the structure. In this section, a structural analysis based on the finite element
+approach is introduced using three-dimensional solid elements. Finite element for-
+mulations for other structural elements, such as bars, beams, and plates, etc . Apart from the moreintricate algebra that is required for more complex elements, the basic approach for
+deriving element equations is identical to the process illustrated in this section.
+Once each element is described, the governing equations of the entire structure may
+then be derived.
+
+%------------------------------------------------------------------------------------------------
+\section{Finite Element Approximation \parencite{ref4}}
+Differential equations and variational equations, introduced in (\ref{theory}) page \pageref{theory},
+are difficult to solve, except for a handful of simple cases. When the geometry is
+complicated, it is not trivial to solve for u(x) analytically. Since the solution that
+satisfies the differential equation and boundary conditions can have a complicated
+expression, an infinite series solution may need to be employed. In the FEM, instead
+of solving the variational equation analytically, an approximate solution is sought.
+The approximate solution u(x) is expressed as a sum of a number of functions that
+are called trial functions:
+\begin{equation}
+\label{eqn:1}
+u(x) = \sum\limits_{i = 1}^n {{c_i}} {\phi _i}(x){\rm{ }}
+\end{equation}
+where $n$ is the number of terms used, $\phi_i(x)$ are known trial functions, and $c_i$ are
+coefficients to be determined by minimizing error between the true and the approxi-
+mate solution. Since the approximate solution is a linear combination of the trial
+functions, the accuracy of approximation depends on them.
+\vspace{0.38cm}
+\newline
+The trial functions and coefficients are chosen such that $u(x)$ must satisfy the
+essential boundary conditions of the problem; that is, $u(x)$ must belong to the
+space of kinematically admissible displacements, $\mathbb{Z}$. Therefore, if the solution to
+the variational equation is approximated by a series of functions in the entire domain
+of the problem, it is difficult to obtain the trial functions that satisfy the essential
+boundary conditions. An important idea of the FEM is to divide the entire domain
+into a set of simple sub-domains or finite elements and then to apply the approximation 
+in Eq. (\ref{eqn:1}) on the element level. Then, it is unnecessary to build the trial
+functions that satisfy the essential boundary conditions. Instead, only those elements
+that include the essential boundary conditions need to have a special treatment.
+The finite elements are connected with adjacent elements by sharing their nodes.
+Then within each finite element, the solution is approximated using a simple
+polynomial form. For example, let us assume that the domain is one-dimensional
+and the exact solution is given as a dashed curve in Fig. \ref{fig:Piecewise}. When the entire domain is divided into sub-domains (finite elements), it is possible to approximate the
+solution using piecewise continuous linear polynomials as shown in Fig. \ref{fig:Piecewise}.
+Within each element, the approximate solution is linear. Two adjacent elements
+have the same solution value at the shared node. As can be seen in the figure, when
+more numbers of elements are used, the approximate piecewise linear solution will
+converge to the exact solution. In addition, the approximation can be more accurate
+if higher-order polynomials are used in each element.\\
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.8]{Figures/Chapter2/Piecewise linear approximation.png}
+    \decoRule   
+    \caption{Piecewise linear approximation of the solution for one-dimensional problem}
+    \label{fig:Piecewise}
+\end{figure}
+
+%--------------------------------------------------------------
+\section{Numerical Integration \parencite{Advance}, \parencite{ref4}}
+\input{Subsection/Numerical Integration}
+%---------------------------------------------------------------
+\section{Newton Raphson Method \parencite{NewtonRapsonBillboard} \parencite{ref4}}
+\input{Subsection/NewtonRaphson}
+%---------------------------------------------------------------
+\section{Plane Finite Elements \parencite{ref6}}
+\input{Subsection/PlaneElement}
+%---------------------------------------------------------------
+\section{Bilinear Lagrange element (Q4) \parencite{LinearStructure}}
+\input{Subsection/Bilinear Lagrange element}
+%-------------------------------------------------------
+\section{Biquadratic Serendipity Element (Q8) \parencite{LinearStructure}}
+\input{Subsection/Biquadratic serendipity element}
+
+% \section{Solution of Non-Linear Static Structural Equations}
+% \input{Subsection/Nonlinear}
+
+
